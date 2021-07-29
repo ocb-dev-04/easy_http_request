@@ -86,7 +86,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       final response = await _dio.put(extraUri, queryParameters: queryParams, data: model.toJson());
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
-      final data = response.data!;
+      final data = response.data;
       if (response.statusCode! > _config.validStatus) return responseModel;
 
       return returnModel ? responseModel : responseModel
@@ -103,7 +103,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       final response = await _dio.patch(extraUri, queryParameters: queryParams, data: model.toJson());
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
-      final data = response.data!;
+      final data = response.data;
       if (response.statusCode! > _config.validStatus) return responseModel;
 
       return returnModel ? responseModel : responseModel
