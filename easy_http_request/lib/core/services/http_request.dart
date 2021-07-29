@@ -36,10 +36,10 @@ class EasyHttpRequest implements HttpContract {
   }) async {
     final Response response = await _dio.get(extraUri, queryParameters: queryParams);
 
-    final data = response.data! as List<Map<String, dynamic>>;
+    final data = response.data! as List<dynamic>;
     if (response.statusCode! > _config.validStatus) return EasyHttpRequestResponse<T>(completeResponse: response);
 
-    return EasyHttpRequestResponse(completeResponse: response)..modelResponseAsList = data.map((e) => model.fromJson(e)).toList();
+    return EasyHttpRequestResponse(completeResponse: response)..modelResponseAsList = data.map((e) => model.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
