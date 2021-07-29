@@ -1,113 +1,208 @@
+import 'package:easy_http_request/data/easy_http_request_models.dart';
+import 'package:easy_http_request/easy_http_request.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:with_get_it_dependency_injection/posts_model.dart';
+import 'package:faker/faker.dart';
 
 void main() {
-  runApp(MyApp());
+  // package init
+  EasyHttpRequest.init(config: HttpConfigData(baseApi: 'https://jsonplaceholder.typicode.com'));
+  DIManager.setup();
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class App extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  Widget build(BuildContext context) => const MaterialApp(home: const MainPage());
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class MainPage extends StatelessWidget {
+  const MainPage();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final di = HttpServices();
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('EHR With Getx DI'),
+        centerTitle: true,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+          children: [
+            MaterialButton(
+              onPressed: () => di.getOne(id: 1),
+              color: Theme.of(context).primaryColor,
+              child: Text('Get One', style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            const SizedBox(height: 20),
+            MaterialButton(
+              onPressed: () => di.getCollection(),
+              color: Theme.of(context).primaryColor,
+              child: Text('Get Many', style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
             ),
+            const SizedBox(height: 20),
+            MaterialButton(
+              onPressed: () => di.post(),
+              color: Theme.of(context).primaryColor,
+              child: Text('POST', style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
+            ),
+            const SizedBox(height: 20),
+            MaterialButton(
+              onPressed: () => di.put(id: 1),
+              color: Theme.of(context).primaryColor,
+              child: Text('PUT', style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
+            ),
+            const SizedBox(height: 20),
+            MaterialButton(
+              onPressed: () => di.patch(id: 1),
+              color: Theme.of(context).primaryColor,
+              child: Text('PATCH', style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
+            ),
+            const SizedBox(height: 20),
+            MaterialButton(
+              onPressed: () => di.delete(id: 1),
+              color: Theme.of(context).primaryColor,
+              child: Text('DELETE', style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class DIManager {
+  static void setup() {
+    final getIt = GetIt.instance;
+    getIt.registerSingleton<EasyHttpRequestContract>(EasyHttpRequest());
+  }
+}
+
+class HttpServices {
+  static final EasyHttpRequestContract _httpContract = GetIt.instance<EasyHttpRequestContract>();
+  static final Faker _faker = Faker();
+
+  final String _extraUri = 'posts';
+
+  PostModel fakerModel = PostModel(
+    id: 1,
+    userId: _faker.randomGenerator.integer(4000, min: 100),
+    title: _faker.company.name(),
+    body: _faker.lorem.sentences(4).join(' '),
+  );
+
+  Future<void> getOne({required int id}) async {
+    try {
+      final response = await _httpContract.onGetOne<PostModel>(extraUri: '$_extraUri/$id', model: PostModel());
+      final justOne = response.modelResponse!;
+
+      _showInfo(justOne.title!, justOne.body!, 'getOne');
+    } catch (e) {
+      _showInfo('Ups!!', 'Some error ocurred', 'getOne');
+    }
+  }
+
+  Future<void> getCollection() async {
+    try {
+      final response = await _httpContract.onGetMany<PostModel>(extraUri: _extraUri, model: PostModel());
+      final collection = response.modelResponseAsList!;
+      _showInfo(collection.last.title!, collection.last.body!, 'getCollection');
+    } catch (e) {
+      _showInfo('Ups!!', 'Some error ocurred', 'getCollection');
+    }
+  }
+
+  Future<void> post() async {
+    try {
+      // If your service return model is created and you need to update the UI with this data, you can do this
+      final response = await _httpContract.onPost<PostModel>(extraUri: _extraUri, model: fakerModel, returnModel: true);
+
+      // Just create
+      // final justCreate = await _httpContract.onPost<PostModel>(extraUri: 'posts', model: fakerModel /* returnModel is false by default */);
+
+      // You can also send query Params instead of sending ids and others directly in the path
+      // final withQueryParams = await _httpContract.onPost<PostModel>(extraUri: 'posts', queryParams: {"id": fakerModel.id}, model: fakerModel /* returnModel is false by default */);
+
+      // if service return a 201 Created status code (is just example)
+      if (response.completeResponse!.statusCode == 201) {
+        _showInfo('CREATED', 'Info created', 'post');
+      } else {
+        _showInfo('Ups!!', 'Some error ocurred', 'post');
+      }
+    } catch (e) {
+      _showInfo('Ups!!', 'Some error ocurred', 'post');
+    }
+  }
+
+  Future<void> put({required int id}) async {
+    try {
+      // If your service return model is up to date and you need to update the UI with this data, you can do this
+      final response = await _httpContract.onPut<PostModel>(extraUri: '$_extraUri/${fakerModel.id}', model: fakerModel, returnModel: true);
+
+      // Just update
+      // final justUpdate = await _httpContract.onPut<PostModel>(extraUri: 'posts/${fakerModel.id}', model: fakerModel /* returnModel is false by default */);
+
+      // You can also send query Params instead of sending ids and others directly in the path
+      // final withQueryParams = await _httpContract.onPut<PostModel>(extraUri: 'posts', queryParams: {"id": fakerModel.id}, model: fakerModel /* returnModel is false by default */);
+
+      // if service return a 200 OK status code (is just example)
+      if (response.completeResponse!.statusCode == 200) {
+        _showInfo('UPDATED', 'Info updated', 'put');
+      } else {
+        _showInfo('Ups!!', 'Some error ocurred', 'put');
+      }
+    } catch (e) {
+      _showInfo('Ups!!', 'Some error ocurred', 'put');
+    }
+  }
+
+  Future<void> patch({required int id}) async {
+    try {
+      // If your service return model is up to date and you need to update the UI with this data, you can do this
+      final response = await _httpContract.onPatch<PostModel>(extraUri: '$_extraUri/${fakerModel.id}', model: fakerModel, returnModel: true);
+
+      // Just update
+      // final justUpdate = await _httpContract.onPatch<PostModel>(extraUri: 'posts/${fakerModel.id}', model: fakerModel /* returnModel is false by default */);
+
+      // You can also send query Params instead of sending ids and others directly in the path
+      // final withQueryParams = await _httpContract.onPatch<PostModel>(extraUri: 'posts', queryParams: {"id": fakerModel.id}, model: fakerModel /* returnModel is false by default */);
+
+      // if service return a 200 OK status code (is just example)
+      if (response.completeResponse!.statusCode == 200) {
+        _showInfo('UPDATED', 'Info updated', 'patch');
+      } else {
+        _showInfo('Ups!!', 'Some error ocurred', 'patch');
+      }
+    } catch (e) {
+      _showInfo('Ups!!', 'Some error ocurred', 'patch');
+    }
+  }
+
+  Future<void> delete({required int id}) async {
+    try {
+      final response = await _httpContract.onDelete(extraUri: '$_extraUri/$id');
+
+      // if service return a 200 OK status code (is just example)
+      if (response.completeResponse!.statusCode == 200) {
+        _showInfo('DELETED', 'Info deleted', 'delete');
+      } else {
+        _showInfo('Ups!!', 'Some error ocurred', 'delete');
+      }
+    } catch (e) {
+      _showInfo('Ups!!', 'Some error ocurred', 'delete');
+    }
+  }
+
+  void _showInfo(String title, String message, String http) {
+    debugPrint('***********************************************');
+    debugPrint(http.toUpperCase());
+    debugPrint('$title - $message');
+    debugPrint('***********************************************');
   }
 }

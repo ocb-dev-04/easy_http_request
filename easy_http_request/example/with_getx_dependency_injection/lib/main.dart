@@ -7,13 +7,9 @@ import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // initilize packge info
-  EasyHttpRequest().init(
-    config: HttpConfigData(
-      baseApi: 'https://jsonplaceholder.typicode.com',
-      includeLogger: false, // disable logger just so you don't see all requests in console
-    ),
-  );
+  EasyHttpRequest.init(config: HttpConfigData(baseApi: 'https://jsonplaceholder.typicode.com'));
   runApp(const App());
 }
 

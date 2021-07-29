@@ -22,11 +22,11 @@ import 'package:easy_http_request/core/config/dio_config.dart';
 ///
 /// Implement EasyHttpRequestContract.
 class EasyHttpRequest implements EasyHttpRequestContract {
-  late Dio _dio;
-  late HttpConfigData _config;
+  static late Dio _dio;
+  static late HttpConfigData _config;
 
   /// Method to initialize the package
-  void init({required HttpConfigData config}) {
+  static void init({required HttpConfigData config}) {
     _dio = HttpClient.getClient(config: config);
     _config = config;
   }
@@ -57,7 +57,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
 
       if (response.statusCode! > _config.validStatus) return responseModel;
 
-      return responseModel..modelResponseAsList = (response.data! as List<dynamic>).map((e) => model.fromJson(e as Map<String, dynamic>)).toList();
+      return responseModel..modelResponseAsList = (response.data! as List).map((e) => model.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       rethrow;
     }

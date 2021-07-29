@@ -14,15 +14,14 @@ void main() {
   late PostModel fakerModel;
 
   setUp(() {
-    client = EasyHttpRequest()
-      ..init(
-        config: HttpConfigData(
-          baseApi: 'https://jsonplaceholder.typicode.com',
-          // disable the logger just so you don't see all
-          // the requests in the console
-          includeLogger: false,
-        ),
-      );
+    EasyHttpRequest.init(
+      config: HttpConfigData(
+        baseApi: 'https://jsonplaceholder.typicode.com',
+        // disable the logger just so you don't see all the requests in the console
+        includeLogger: false,
+      ),
+    );
+    client = EasyHttpRequest();
     faker = Faker();
     fakerModel = PostModel(
       id: 1,
