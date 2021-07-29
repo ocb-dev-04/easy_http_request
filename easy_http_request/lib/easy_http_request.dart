@@ -90,7 +90,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       if (response.statusCode! > _config.validStatus) return responseModel;
 
       return returnModel ? responseModel : responseModel
-        ..modelResponse = model.fromJson(data);
+        ..modelResponse = model.fromJson(data as Map<String, dynamic>);
     } catch (e) {
       rethrow;
     }
@@ -107,14 +107,14 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       if (response.statusCode! > _config.validStatus) return responseModel;
 
       return returnModel ? responseModel : responseModel
-        ..modelResponse = model.fromJson(data);
+        ..modelResponse = model.fromJson(data as Map<String, dynamic>);
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<EasyHttpRequestResponse> onDelete({required String extraUri, Map<String, dynamic> queryParams = const {}}) async {
+  Future<EasyHttpRequestResponse<dynamic>> onDelete({required String extraUri, Map<String, dynamic> queryParams = const {}}) async {
     try {
       final response = await _dio.delete(extraUri, queryParameters: queryParams);
       return EasyHttpRequestResponse(completeResponse: response);
@@ -280,5 +280,5 @@ abstract class EasyHttpRequestContract {
   /// https://www.domain.com/api/users/id=3 has id = 3 as a parameter. With this property you can do this: {"id": 3}
   ///
   /// And it will be exactly the same
-  Future<EasyHttpRequestResponse> onDelete({required String extraUri, Map<String, dynamic> queryParams = const {}});
+  Future<EasyHttpRequestResponse<dynamic>> onDelete({required String extraUri, Map<String, dynamic> queryParams = const {}});
 }
