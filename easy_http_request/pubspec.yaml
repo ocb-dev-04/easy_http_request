@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
 
 dev_dependencies: 
+  faker: 2.0.0
+  lint: 1.5.3
   flutter_test: 
     sdk: flutter
 

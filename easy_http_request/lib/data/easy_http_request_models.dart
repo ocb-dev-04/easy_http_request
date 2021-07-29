@@ -19,12 +19,12 @@ class HttpConfigData {
 }
 
 class EasyHttpRequestResponse<T> {
-  Response<dynamic> completeResponse;
+  Response<dynamic>? completeResponse;
   T? modelResponse;
   List<T>? modelResponseAsList;
 
   EasyHttpRequestResponse({
-    required this.completeResponse,
+    this.completeResponse,
     this.modelResponse,
     this.modelResponseAsList,
   });

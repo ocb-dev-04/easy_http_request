@@ -20,12 +20,15 @@ class EasyHttpRequest implements HttpContract {
     Map<String, dynamic> queryParams = const {},
     required T model,
   }) async {
-    final Response response = await _dio.get(extraUri, queryParameters: queryParams);
+    try {
+      final Response response = await _dio.get(extraUri, queryParameters: queryParams);
+      EasyHttpRequestResponse<T> responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
+      if (response.statusCode! > _config.validStatus) return responseModel;
 
-    final data = response.data! as Map<String, dynamic>;
-    if (response.statusCode! > _config.validStatus) return EasyHttpRequestResponse<T>(completeResponse: response);
-
-    return EasyHttpRequestResponse(completeResponse: response)..modelResponse = model.fromJson(data);
+      return responseModel..modelResponse = model.fromJson(response.data! as Map<String, dynamic>);
+    } catch (e) {
+      throw e;
+    }
   }
 
   @override
@@ -34,27 +37,36 @@ class EasyHttpRequest implements HttpContract {
     Map<String, dynamic> queryParams = const {},
     required T model,
   }) async {
-    final Response response = await _dio.get(extraUri, queryParameters: queryParams);
+    try {
+      final Response response = await _dio.get(extraUri, queryParameters: queryParams);
+      EasyHttpRequestResponse<T> responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
-    final data = response.data! as List<dynamic>;
-    if (response.statusCode! > _config.validStatus) return EasyHttpRequestResponse<T>(completeResponse: response);
+      if (response.statusCode! > _config.validStatus) return responseModel;
 
-    return EasyHttpRequestResponse(completeResponse: response)..modelResponseAsList = data.map((e) => model.fromJson(e as Map<String, dynamic>)).toList();
+      return responseModel..modelResponseAsList = (response.data! as List<dynamic>).map((e) => model.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw e;
+    }
   }
 
   @override
   Future<EasyHttpRequestResponse<T>> onPost<T extends HttpDataParser<T>>({
     required String extraUri,
     required T model,
+    Map<String, dynamic> queryParams = const {},
     bool returnModel = false,
   }) async {
-    final Response<T> response = await _dio.post<T>(extraUri, data: model.toJson());
+    try {
+      final Response response = await _dio.post(extraUri, queryParameters: queryParams, data: model.toJson());
+      EasyHttpRequestResponse<T> responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
-    final data = response.data!;
-    if (response.statusCode! > _config.validStatus) return EasyHttpRequestResponse<T>(completeResponse: response);
+      if (response.statusCode! > _config.validStatus) return responseModel;
 
-    return returnModel ? EasyHttpRequestResponse(completeResponse: response) : EasyHttpRequestResponse(completeResponse: response)
-      ..modelResponse = data;
+      return returnModel ? responseModel : responseModel
+        ..modelResponse = model.fromJson(response.data! as Map<String, dynamic>);
+    } catch (e) {
+      throw e;
+    }
   }
 
   @override
@@ -64,13 +76,18 @@ class EasyHttpRequest implements HttpContract {
     Map<String, dynamic> queryParams = const {},
     bool returnModel = false,
   }) async {
-    final Response response = await _dio.put(extraUri, data: model.toJson());
+    try {
+      final Response response = await _dio.put(extraUri, queryParameters: queryParams, data: model.toJson());
+      EasyHttpRequestResponse<T> responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
-    final data = response.data!;
-    if (response.statusCode! > _config.validStatus) return EasyHttpRequestResponse<T>(completeResponse: response);
+      final data = response.data!;
+      if (response.statusCode! > _config.validStatus) return responseModel;
 
-    return returnModel ? EasyHttpRequestResponse(completeResponse: response) : EasyHttpRequestResponse(completeResponse: response)
-      ..modelResponse = model.fromJson(data);
+      return returnModel ? responseModel : responseModel
+        ..modelResponse = model.fromJson(data);
+    } catch (e) {
+      throw e;
+    }
   }
 
   @override
@@ -78,8 +95,12 @@ class EasyHttpRequest implements HttpContract {
     required String extraUri,
     Map<String, dynamic> queryParams = const {},
   }) async {
-    final Response response = await _dio.delete(extraUri, queryParameters: queryParams);
+    try {
+      final Response response = await _dio.delete(extraUri, queryParameters: queryParams);
 
-    return EasyHttpRequestResponse(completeResponse: response);
+      return EasyHttpRequestResponse(completeResponse: response);
+    } catch (e) {
+      throw e;
+    }
   }
 }
