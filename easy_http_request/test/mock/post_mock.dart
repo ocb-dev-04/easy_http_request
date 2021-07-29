@@ -15,17 +15,17 @@ class PostModel extends HttpDataParser<PostModel> {
 
   @override
   PostModel fromJson(Map<String, dynamic> json) => PostModel(
-        userId: json["userId"],
-        id: json["id"],
-        title: json["title"],
-        body: json["body"],
+        userId: json['userId'],
+        id: json['id'],
+        title: json['title'],
+        body: json['body'],
       );
 
   @override
   Map<String, dynamic> toJson() => {
-        "userId": userId,
-        "id": id,
-        "title": title,
-        "body": body,
+        'userId': userId,
+        'id': id,
+        'title': title,
+        'body': body,
       };
 }

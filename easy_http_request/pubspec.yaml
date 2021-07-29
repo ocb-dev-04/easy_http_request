@@ -1,6 +1,6 @@
 name: easy_http_request
-version: 0.0.1
-description: A new Flutter package project.
+version: 1.0.1
+description: A package that aims to make apis or web services queries simpler, you focus on creating the model, this package takes care of the rest.
 environment: 
   sdk: '>=2.12.0 <3.0.0'
   flutter: '>=1.17.0'
@@ -13,7 +13,7 @@ dependencies:
 
 dev_dependencies: 
   faker: 2.0.0
-  lint: 1.5.3
+  very_good_analysis: 2.2.0
   flutter_test: 
     sdk: flutter
 
