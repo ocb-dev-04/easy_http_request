@@ -17,6 +17,5 @@ dependencies:
 dev_dependencies: 
   faker: 2.0.0
   very_good_analysis: 2.2.0
-  mockito: 5.0.12
   flutter_test: 
     sdk: flutter

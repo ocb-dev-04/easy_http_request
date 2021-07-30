@@ -7,7 +7,6 @@ import 'package:easy_http_request/easy_http_request.dart';
 import 'package:easy_http_request/data/easy_http_request_models.dart';
 
 import 'mock/models/post_mock.dart';
-import 'mock/services_mocks/easy_http_mock.dart';
 
 void main() {
   late EasyHttpRequest client;
