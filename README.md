@@ -2,17 +2,40 @@
 
 A package that simplifies the queries to the apis or web services, you focus on creating the model, this package takes care of the rest.
 
+## Table of contents
+- [easy_http_request](#easy_http_request)
+  - [Table of contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Installation](#installation)
+    - [Initialization](#initialization)
+    - [Combine with Dependency Injection](#combine-with-dependency-injection)
+    - [Configure the model](#configure-the-model)
+    - [Parameters and Response Data](#parameters-and-response-data)
+    - [Examples](#examples)
+    - [License](#license)
+
+
 ## Getting Started
 First of all, welcome to the easy way to consume services.
 
-### Add dependency
+
+### Installation
+
+Add dependency
 
 ```yaml
 dependencies:
   easy_http_request: 1.0.0
 ```
 
-### First we must initialize
+### Initialization
+
+First, import dependeny:
+```dart
+import 'package:easy_http_request/easy_http_request.dart';
+```
+
+Then:
 
 ```dart
 EasyHttpRequest.init(config: HttpConfigData(baseApi: 'https://jsonplaceholder.typicode.com'));
@@ -52,13 +75,8 @@ int validStatus;
 
 Feel free to configure it to your need.
 
-### So ... let's use
 
-First, import dependeny:
-```dart
-import 'package:easy_http_request/easy_http_request.dart';
-
-```
+### Combine with Dependency Injection
 So now you can:
 
 1. Use Getx Dependency Injection:
@@ -85,6 +103,7 @@ class DIManager {
 ```dart
 final httpServices = EasyHttpRequest();
 ```
+
 
 ### Configure the model
 
@@ -165,24 +184,10 @@ class PostModel implements HttpDataParser<PostModel>{}
 
 And, add the <strong>@override</strong> to the <strong>toJson</strong> and <strong>fromJson</strong> methods and that's it.
 
-### Now, try make a request
 
-Get collection from API:
-```dart
-Future<void> getById({required int id}) async {
-    try {
-      final response = await _httpContract.onGetOne<PostModel>(extraUri: 'posts/$id', model: PostModel());
-      final justOne = response.modelResponse!;
-      debugPrint('${justOne.title!} - ${justOne.body!}');
-    } catch (e) {
-      debugPrint(e);
-    }
-  }
-```
+### Parameters and Response Data
 
-Something you should know:
-
-1. The parameters to make a request:
+1. Parameters to make a request:
 
 ```dart
 String extraUri 
@@ -252,8 +257,62 @@ EasyHttpRequestResponse({
 * modelResponseAsList => Returns a collection of the model. Only value is returned in the onGetMany
 
 
-Puedes encontrar un ejemplo completo [aqui](./example/with_get_it_dependency_injection/lib/main.dart)
+### Examples
 
+Get <strong>SINGLE</strong> model from API using onGetOne method:
+```dart
+final response = await easyHttp.onGetOne<PostModel>(extraUri: 'posts/$id', model: PostModel());
+```
+
+Get <strong>COLLECTION</strong> from API using onGetMany method:
+```dart
+final response = await easyHttp.onGetMany<PostModel>(extraUri: 'posts', model: PostModel());
+```
+
+Send <strong>POST</strong> to API using onPost method:
+```dart
+final fakerModel = PostModel(
+      id: 1,
+      userId: faker.randomGenerator.integer(4000, min: 100),
+      title: faker.company.name(),
+      body: faker.lorem.sentences(4).join(' '),
+    );
+final response = await easyHttp.onPost<PostModel>(extraUri: 'posts', model: fakerModel);
+```
+
+Send <strong>PUT</strong> to API using onPut method:
+```dart
+final fakerModel = PostModel(
+      id: 1,
+      userId: faker.randomGenerator.integer(4000, min: 100),
+      title: faker.company.name(),
+      body: faker.lorem.sentences(4).join(' '),
+    );
+final response = await easyHttp.onPut<PostModel>(extraUri: 'posts/$id', model: fakerModel);
+```
+
+Send <strong>PATCH</strong> to API using onPatch method:
+```dart
+final fakerModel = PostModel(
+      id: 1,
+      userId: faker.randomGenerator.integer(4000, min: 100),
+      title: faker.company.name(),
+      body: faker.lorem.sentences(4).join(' '),
+    );
+final response = await easyHttp.onPatch<PostModel>(extraUri: 'posts/$id', model: fakerModel);
+```
+
+Send <strong>DELETE</strong> to API using onDelete method:
+```dart
+// onDelete not need send model
+final response = await easyHttp.onDelete(extraUri: 'posts/$id');
+```
+
+
+You can find a complete example [here](./example/with_get_it_dependency_injection/lib/main.dart)
+
+
+### License
 
 ```LICENSE
 MIT License
