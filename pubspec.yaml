@@ -1,6 +1,9 @@
 name: easy_http_request
+author: Oscar Chavez Brito<oscarchb04@gmail.com>
 version: 1.0.1
+homepage: https://github.com/ocb-dev-04/easy_http_request
 description: A package that aims to make apis or web services queries simpler, you focus on creating the model, this package takes care of the rest.
+repository: https://github.com/ocb-dev-04/easy_http_request
 environment: 
   sdk: '>=2.12.0 <3.0.0'
   flutter: '>=1.17.0'
@@ -14,6 +17,7 @@ dependencies:
 dev_dependencies: 
   faker: 2.0.0
   very_good_analysis: 2.2.0
+  mockito: 5.0.12
   flutter_test: 
     sdk: flutter
 

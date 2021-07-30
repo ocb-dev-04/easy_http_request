@@ -12,7 +12,7 @@ on:
 
 env:
     FLUTTER_VERSION: '2.2.3'
-    APP_PATH: 'easy_http_request'
+    APP_PATH: './'
 
 jobs:
   dependencies:
