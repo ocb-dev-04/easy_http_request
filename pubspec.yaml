@@ -1,6 +1,5 @@
 name: easy_http_request
 description: A package that simplifies the queries to the apis or web services, you focus on creating the model, this package takes care of the rest.
-author: Oscar Chavez Brito<oscarchb04@gmail.com>
 version: 1.0.0
 homepage: https://github.com/ocb-dev-04/easy_http_request
 repository: https://github.com/ocb-dev-04/easy_http_request
@@ -9,8 +8,8 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies: 
-  dio: 4.0.0
-  dio_http_formatter: 2.0.0
+  dio: ^4.0.0
+  dio_http_formatter: ^2.0.0
   flutter: 
     sdk: flutter
 
