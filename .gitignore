@@ -3,8 +3,6 @@
 *.log
 *.pyc
 *.swp
-*.lock
-*.metadata
 .DS_Store
 .atom/
 .buildlog/
@@ -28,6 +26,8 @@
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
+.lock
+.metadata
 .pub-cache/
 .pub/
 build/
