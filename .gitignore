@@ -3,6 +3,8 @@
 *.log
 *.pyc
 *.swp
+.lock
+.metadata
 .DS_Store
 .atom/
 .buildlog/
@@ -29,8 +31,6 @@
 .pub-cache/
 .pub/
 build/
-*.lock
-*.metadata
 
 # Android related
 **/android/**/gradle-wrapper.jar
