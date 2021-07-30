@@ -1,6 +1,6 @@
 import 'package:easy_http_request/core/parser/http_parser.dart';
 
-class PostModel extends HttpDataParser<PostModel> {
+class PostModel implements HttpDataParser<PostModel> {
   PostModel({
     this.userId,
     this.id,

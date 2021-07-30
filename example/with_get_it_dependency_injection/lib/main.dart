@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
+import 'package:get_it/get_it.dart';
+import 'package:faker/faker.dart';
+
 import 'package:easy_http_request/data/easy_http_request_models.dart';
 import 'package:easy_http_request/easy_http_request.dart';
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:with_get_it_dependency_injection/posts_model.dart';
-import 'package:faker/faker.dart';
+import 'package:easy_http_request/core/parser/http_parser.dart';
 
 void main() {
   // package init
@@ -200,9 +202,40 @@ class HttpServices {
   }
 
   void _showInfo(String title, String message, String http) {
-    debugPrint('***********************************************');
+    debugPrint('***************************************************************');
     debugPrint(http.toUpperCase());
-    debugPrint('$title - $message');
-    debugPrint('***********************************************');
+    debugPrint('Title => $title');
+    debugPrint('Body => $message');
+    debugPrint('***************************************************************');
   }
+}
+
+class PostModel implements HttpDataParser<PostModel> {
+  PostModel({
+    this.userId,
+    this.id,
+    this.title,
+    this.body,
+  });
+
+  int? userId;
+  int? id;
+  String? title;
+  String? body;
+
+  @override
+  PostModel fromJson(Map<String, dynamic> json) => PostModel(
+        userId: json["userId"],
+        id: json["id"],
+        title: json["title"],
+        body: json["body"],
+      );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "userId": userId,
+        "id": id,
+        "title": title,
+        "body": body,
+      };
 }
