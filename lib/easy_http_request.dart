@@ -1,4 +1,4 @@
-library easy_http_request;
+library easy_http;
 
 import 'dart:core';
 
@@ -23,12 +23,17 @@ import 'package:easy_http_request/core/config/dio_config.dart';
 /// Implement EasyHttpRequestContract.
 class EasyHttpRequest implements EasyHttpRequestContract {
   static late Dio _dio;
-  static late HttpConfigData _config;
+  static late EasyHttpConfig _config;
+  static late HttpConfigOptions _options;
 
-  /// Method to initialize the package
-  static void init({required HttpConfigData config}) {
+  /// Method to initialize the package with just a endpoint (base url - baseApi)
+  static void init({
+    required EasyHttpConfig config,
+    HttpConfigOptions options = HttpConfigOptions.oneEndpoint,
+  }) {
     _dio = HttpClient.getClient(config: config);
     _config = config;
+    _options = options;
   }
 
   @override
@@ -38,6 +43,15 @@ class EasyHttpRequest implements EasyHttpRequestContract {
     Map<String, dynamic> queryParams = const {},
   }) async {
     try {
+      switch (_options) {
+        case HttpConfigOptions.oneEndpoint:
+          break;
+        case HttpConfigOptions.manyEndpointSameConfig:
+          break;
+        case HttpConfigOptions.manyEndpointsDiferentsConfig:
+          break;
+        default:
+      }
       final response = await _dio.get(extraUri, queryParameters: queryParams);
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
       if (response.statusCode! > _config.validStatus) return responseModel;
@@ -281,4 +295,16 @@ abstract class EasyHttpRequestContract {
   ///
   /// And it will be exactly the same
   Future<EasyHttpRequestResponse<dynamic>> onDelete({required String extraUri, Map<String, dynamic> queryParams = const {}});
+}
+
+/// Set way to configure package
+enum HttpConfigOptions {
+  /// If you only use an endpoint (baseUrl)
+  oneEndpoint,
+
+  /// If you use multiple endpoints (baseUrl) with different configurations
+  manyEndpointsDiferentsConfig,
+
+  /// If you will use multiple endpoints but, with the same configuration
+  manyEndpointSameConfig,
 }

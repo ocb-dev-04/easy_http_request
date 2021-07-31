@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 
 /// Class used to initialize the package
-class HttpConfigData {
+class EasyHttpConfig {
   /// Model that is requested when initializing the package.
   ///
   /// It has the basic information both for the creation of the hhtp client
   /// and to validate the maximum status code with which it can be interpreted
   /// that a request is invalid or not.
-  HttpConfigData({
+  EasyHttpConfig({
     required this.baseApi,
     this.headers = const {},
     this.timeOut = 30 * 1000,

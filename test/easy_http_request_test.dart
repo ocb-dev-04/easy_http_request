@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
 
-import 'package:easy_http_request/easy_http_request.dart';
-import 'package:easy_http_request/data/easy_http_request_models.dart';
+import 'package:easy_http/easy_http.dart';
+import 'package:easy_http/data/easy_http_request_models.dart';
 
 import 'mock/models/post_mock.dart';
 

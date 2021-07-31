@@ -6,7 +6,7 @@ import 'package:easy_http_request/data/easy_http_request_models.dart';
 /// Class to configure the http client (Dio)
 class HttpClient {
   /// Allows access to the previously configured http client
-  static Dio getClient({required HttpConfigData config}) {
+  static Dio getClient({required EasyHttpConfig config}) {
     final dio = Dio();
     dio.options.baseUrl = '${config.baseApi}/';
     dio.options.connectTimeout = config.timeOut;

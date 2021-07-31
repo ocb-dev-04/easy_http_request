@@ -1,11 +1,9 @@
 # easy_http_request
-
 A package that simplifies the queries to the apis or web services, you focus on creating the model, this package takes care of the rest.
 
-## Table of contents
+
 - [easy_http_request](#easy_http_request)
-  - [Table of contents](#table-of-contents)
-  - [Getting Started](#getting-started)
+    - [Getting Started](#getting-started)
     - [Installation](#installation)
     - [Initialization](#initialization)
     - [Combine with Dependency Injection](#combine-with-dependency-injection)
@@ -15,7 +13,7 @@ A package that simplifies the queries to the apis or web services, you focus on 
     - [License](#license)
 
 
-## Getting Started
+### Getting Started
 First of all, welcome to the easy way to consume services.
 
 
@@ -25,7 +23,7 @@ Add dependency
 
 ```yaml
 dependencies:
-  easy_http_request: 1.0.0
+  easy_http: 1.0.0
 ```
 
 ### Initialization

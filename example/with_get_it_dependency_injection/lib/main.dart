@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:faker/faker.dart';
 
-import 'package:easy_http_request/data/easy_http_request_models.dart';
-import 'package:easy_http_request/easy_http_request.dart';
-import 'package:easy_http_request/core/parser/http_parser.dart';
+import 'package:easy_http/data/easy_http_request_models.dart';
+import 'package:easy_http/easy_http_request.dart';
+import 'package:easy_http/core/parser/http_parser.dart';
 
 void main() {
   // package init
