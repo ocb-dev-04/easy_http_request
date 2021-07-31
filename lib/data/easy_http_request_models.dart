@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-/// Class used to initialize the package
+/// Class used to set http client config
 class EasyHttpConfig {
   /// Model that is requested when initializing the package.
   ///
@@ -8,7 +8,8 @@ class EasyHttpConfig {
   /// and to validate the maximum status code with which it can be interpreted
   /// that a request is invalid or not.
   EasyHttpConfig({
-    required this.baseApi,
+    required this.apiPath,
+    required this.label,
     this.headers = const {},
     this.timeOut = 30 * 1000,
     this.validStatus = 204,
@@ -17,7 +18,10 @@ class EasyHttpConfig {
   });
 
   /// Base URL of your service
-  late String baseApi;
+  late String apiPath;
+
+  /// Label (name) to identifier API path
+  late String label;
 
   /// Headers you want to include in your queries
   late Map<String, dynamic> headers;
@@ -66,11 +70,11 @@ class EasyHttpRequestResponse<T> {
 
   /// The information of the MODEL itself
   ///
-  /// Applies only for the [onGetOne]
+  /// Applies only for the [onGetSingle]
   T? modelResponse;
 
   /// The information of the COLLECTION of the model.
   ///
-  /// Applies only for the [onGetMany]
+  /// Applies only for the [onGetCollection]
   List<T>? modelResponseAsList;
 }
