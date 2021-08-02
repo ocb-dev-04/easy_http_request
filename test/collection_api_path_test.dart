@@ -7,6 +7,8 @@ import 'package:faker/faker.dart';
 
 import 'mock/models/post_mock.dart';
 
+var count = 0;
+
 void main() {
   late EasyHttpRequest client;
   late Faker faker;
@@ -15,17 +17,27 @@ void main() {
   const secondIdentifier = 'SecondApiPath';
 
   setUp(() {
-    EasyHttpInit.initWithManyApi(
+    /*
+			* The setup method is cyclical, when the method is repeated 
+			* it executes the initWithManyApi again, and it already has 
+			* the identifiers saved, therefore it throws an exception. 
+			* So it is valid that it is only initialized in the first 
+			* cycle, if it is greater than 0 (if it is a second cycle), 
+			* it only returns 
+		*/
+    if (count > 0) return;
+
+    EasyHttpSettings.initWithManyApi(
       config: [
         EasyHttpConfig(
           apiPath: 'https://jsonplaceholder.typicode.com',
-          label: firstIdentifier,
+          identifier: firstIdentifier,
           // disable the logger just so you don't see all the requests in the console
           includeLogger: false,
         ),
         EasyHttpConfig(
           apiPath: 'https://jsonplaceholder.typicode.com',
-          label: secondIdentifier,
+          identifier: secondIdentifier,
           // disable the logger just so you don't see all the requests in the console
           includeLogger: false,
         ),
@@ -39,6 +51,7 @@ void main() {
       title: faker.company.name(),
       body: faker.lorem.sentences(4).join(' '),
     );
+    count++;
   });
 
   group('On Get Single => ', () {

@@ -14,10 +14,10 @@ void main() {
   const identifier = 'SingleApiPath';
 
   setUp(() {
-    EasyHttpInit.initWithSigleApi(
+    EasyHttpSettings.initWithSigleApi(
       config: EasyHttpConfig(
         apiPath: 'https://jsonplaceholder.typicode.com',
-        label: identifier,
+        identifier: identifier,
         // disable the logger just so you don't see all the requests in the console
         includeLogger: false,
       ),

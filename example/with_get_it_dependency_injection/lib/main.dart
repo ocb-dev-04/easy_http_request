@@ -3,13 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:faker/faker.dart';
 
-import 'package:easy_http/data/easy_http_request_models.dart';
-import 'package:easy_http/easy_http_request.dart';
-import 'package:easy_http/core/parser/http_parser.dart';
+import 'package:easy_http_request/data/easy_http_request_models.dart';
+import 'package:easy_http_request/easy_http_request.dart';
+import 'package:easy_http_request/core/parser/http_parser.dart';
+
+const String mainApiPath = 'MAIN_API';
 
 void main() {
   // package init
-  EasyHttpRequest.init(config: HttpConfigData(baseApi: 'https://jsonplaceholder.typicode.com'));
+  EasyHttpSettings.initWithSigleApi(
+    config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath),
+  );
+  // EasyHttpSettings.initWithManyApi(config: [
+  //   EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath),
+  //   EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath),
+  // ]);
+
   DIManager.setup();
   runApp(App());
 }
@@ -101,7 +110,13 @@ class HttpServices {
 
   Future<void> getOne({required int id}) async {
     try {
-      final response = await _httpContract.onGetOne<PostModel>(extraUri: '$_extraUri/$id', model: PostModel());
+      EasyHttpSettings.changeSingleHttpClientConfig(
+        config: EasyChangeHttpConfig(
+          identifier: mainApiPath,
+          headers: {"jwt": "qwertyuiop"},
+        ),
+      );
+      final response = await _httpContract.onGetSingle<PostModel>(extraUri: '$_extraUri/$id', model: PostModel());
       final justOne = response.modelResponse!;
 
       _showInfo(justOne.title!, justOne.body!, 'getOne');
@@ -112,7 +127,13 @@ class HttpServices {
 
   Future<void> getCollection() async {
     try {
-      final response = await _httpContract.onGetMany<PostModel>(extraUri: _extraUri, model: PostModel());
+      EasyHttpSettings.changeSingleHttpClientConfig(
+        config: EasyChangeHttpConfig(
+          identifier: mainApiPath,
+          headers: {"api_path": "poiuytrewq"},
+        ),
+      );
+      final response = await _httpContract.onGetCollection<PostModel>(extraUri: _extraUri, model: PostModel());
       final collection = response.modelResponseAsList!;
       _showInfo(collection.last.title!, collection.last.body!, 'getCollection');
     } catch (e) {

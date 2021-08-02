@@ -19,12 +19,18 @@ import 'package:easy_http_request/core/config/dio_config.dart';
 // *****************************************************************************
 
 /// Initializer at package
-class EasyHttpInit {
+class EasyHttpSettings {
   /// Method to initialize the package with just a endpoint (base url - baseApi)
   static void initWithSigleApi({required EasyHttpConfig config}) => EasyHttpClient.setSingleClient(config: config);
 
   /// Method to initialize the package with many a endpoint (base url - baseApi)
   static void initWithManyApi({required List<EasyHttpConfig> config}) => EasyHttpClient.setManyClient(config: config);
+
+  ///  Change http client settings when client was initialized (single client)
+  static void changeSingleHttpClientConfig({required EasyChangeHttpConfig config}) => EasyHttpClient.changeSingleHttpClientConfig(config: config);
+
+  /// Change http client settings when client was initialized (collection client)
+  static void changeManyHttpClientConfig({required EasyChangeHttpConfig config}) => EasyHttpClient.changeManyHttpClientConfig(config: config);
 }
 
 /// Main class of the package. Contains all the methods you can use.
@@ -44,7 +50,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
 
     if (apiOption == HttpConfigOptions.singleApiPath) {
       final getInstance = EasyHttpClient.singleClient;
-      dio = getInstance.dio;
+      dio = getInstance!.dio;
       config = getInstance.config;
     } else {
       if (identifier.isEmpty) throw Exception('Need a identifier to access to Http Client instance');
@@ -57,7 +63,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
     try {
       final response = await dio.get(extraUri, queryParameters: queryParams);
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
-      if (response.statusCode! > config.validStatus) return responseModel;
+      if (response.statusCode! > config.validStatus!) return responseModel;
 
       return responseModel..modelResponse = model.fromJson(response.data! as Map<String, dynamic>);
     } catch (e) {
@@ -78,7 +84,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
 
     if (apiOption == HttpConfigOptions.singleApiPath) {
       final getInstance = EasyHttpClient.singleClient;
-      dio = getInstance.dio;
+      dio = getInstance!.dio;
       config = getInstance.config;
     } else {
       if (identifier.isEmpty) throw Exception('Need a identifier to access to Http Client instance');
@@ -91,7 +97,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       final response = await dio.get(extraUri, queryParameters: queryParams);
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
-      if (response.statusCode! > config.validStatus) return responseModel;
+      if (response.statusCode! > config.validStatus!) return responseModel;
 
       return responseModel..modelResponseAsList = (response.data! as List).map((e) => model.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -113,7 +119,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
 
     if (apiOption == HttpConfigOptions.singleApiPath) {
       final getInstance = EasyHttpClient.singleClient;
-      dio = getInstance.dio;
+      dio = getInstance!.dio;
       config = getInstance.config;
     } else {
       if (identifier.isEmpty) throw Exception('Need a identifier to access to Http Client instance');
@@ -126,7 +132,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       final response = await dio.post(extraUri, queryParameters: queryParams, data: model.toJson());
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
-      if (response.statusCode! > config.validStatus) return responseModel;
+      if (response.statusCode! > config.validStatus!) return responseModel;
 
       return returnModel ? responseModel : responseModel
         ..modelResponse = model.fromJson(response.data! as Map<String, dynamic>);
@@ -149,7 +155,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
 
     if (apiOption == HttpConfigOptions.singleApiPath) {
       final getInstance = EasyHttpClient.singleClient;
-      dio = getInstance.dio;
+      dio = getInstance!.dio;
       config = getInstance.config;
     } else {
       if (identifier.isEmpty) throw Exception('Need a identifier to access to Http Client instance');
@@ -163,7 +169,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
       final data = response.data;
-      if (response.statusCode! > config.validStatus) return responseModel;
+      if (response.statusCode! > config.validStatus!) return responseModel;
 
       return returnModel ? responseModel : responseModel
         ..modelResponse = model.fromJson(data as Map<String, dynamic>);
@@ -186,7 +192,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
 
     if (apiOption == HttpConfigOptions.singleApiPath) {
       final getInstance = EasyHttpClient.singleClient;
-      dio = getInstance.dio;
+      dio = getInstance!.dio;
       config = getInstance.config;
     } else {
       if (identifier.isEmpty) throw Exception('Need a identifier to access to Http Client instance');
@@ -200,7 +206,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
       final responseModel = EasyHttpRequestResponse<T>(completeResponse: response);
 
       final data = response.data;
-      if (response.statusCode! > config.validStatus) return responseModel;
+      if (response.statusCode! > config.validStatus!) return responseModel;
 
       return returnModel ? responseModel : responseModel
         ..modelResponse = model.fromJson(data as Map<String, dynamic>);
@@ -219,7 +225,7 @@ class EasyHttpRequest implements EasyHttpRequestContract {
     late Dio dio;
 
     if (apiOption == HttpConfigOptions.singleApiPath) {
-      dio = EasyHttpClient.singleClient.dio;
+      dio = EasyHttpClient.singleClient!.dio;
     } else {
       if (identifier.isEmpty) throw Exception('Need a identifier to access to Http Client instance');
       dio = EasyHttpClient.getFromMany(identifier).dio;
