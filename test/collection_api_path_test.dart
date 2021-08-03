@@ -33,7 +33,7 @@ void main() {
           apiPath: 'https://jsonplaceholder.typicode.com',
           identifier: firstIdentifier,
           // disable the logger just so you don't see all the requests in the console
-          includeLogger: false,
+          // includeLogger: false,
         ),
         EasyHttpConfig(
           apiPath: 'https://jsonplaceholder.typicode.com',

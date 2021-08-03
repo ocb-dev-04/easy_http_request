@@ -61,7 +61,7 @@ class EasyHttpClient {
           dio: _setDio(_addNewHeaders(newHeaders, oldConfig.config)), identifier: identifier, config: _addNewHeaders(newHeaders, oldConfig.config)));
   }
 
-  /// Add header when client was initialized (collection client)
+  /// Update header when client was initialized (collection client)
   static void updateHeadersManyClient({required String identifier, required String key, required dynamic value}) {
     _duplicatedIdentifier(newIdentifier: identifier);
 
@@ -73,7 +73,7 @@ class EasyHttpClient {
       ..add(ManyClientInstances(dio: _setDio(newConfig), identifier: identifier, config: newConfig));
   }
 
-  /// Add header when client was initialized (collection client)
+  /// Remove header when client was initialized (collection client)
   static void removeHeadersManyClient({required String identifier, required String key}) {
     _duplicatedIdentifier(newIdentifier: identifier);
     final oldConfig = manyClient.firstWhere(((element) => element.identifier == identifier), orElse: () => throw Exception(KMessages.notFoundIdentifier));
@@ -82,8 +82,6 @@ class EasyHttpClient {
       ..removeWhere((element) => element.identifier == identifier)
       ..add(ManyClientInstances(dio: _setDio(newConfig), identifier: identifier, config: newConfig));
   }
-
-  static bool _duplicatedIdentifier({required String newIdentifier}) => manyClient.any((element) => element.identifier == newIdentifier);
 
   static Dio _setDio(EasyHttpConfig e) {
     final dio = Dio();
@@ -110,6 +108,8 @@ class EasyHttpClient {
     toUpdate ? oldConfig.headers.update(key, (value) => value = valueIfToUpdate) : oldConfig.headers.remove(key);
     return oldConfig;
   }
+
+  static bool _duplicatedIdentifier({required String newIdentifier}) => manyClient.any((element) => element.identifier == newIdentifier);
 }
 
 /// Class for create instances of dio and respective label (identifiers)
