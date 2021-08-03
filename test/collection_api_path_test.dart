@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
 
 import 'mock/models/post_mock.dart';
+import 'mock/models/products_mock.dart';
 
 var count = 0;
 
@@ -13,6 +14,7 @@ void main() {
   late EasyHttpRequest client;
   late Faker faker;
   late PostModel fakerModel;
+  late ProductsModel prodFakerModel;
   const firstIdentifier = 'FirstApiPath';
   const secondIdentifier = 'SecondApiPath';
 
@@ -33,13 +35,13 @@ void main() {
           apiPath: 'https://jsonplaceholder.typicode.com',
           identifier: firstIdentifier,
           // disable the logger just so you don't see all the requests in the console
-          // includeLogger: false,
+          includeLogger: false,
         ),
         EasyHttpConfig(
-          apiPath: 'https://jsonplaceholder.typicode.com',
+          apiPath: 'https://fakestoreapi.com',
           identifier: secondIdentifier,
           // disable the logger just so you don't see all the requests in the console
-          // includeLogger: false,
+          includeLogger: false,
         ),
       ],
     );
@@ -50,6 +52,13 @@ void main() {
       userId: faker.randomGenerator.integer(4000, min: 100),
       title: faker.company.name(),
       body: faker.lorem.sentences(4).join(' '),
+    );
+    prodFakerModel = ProductsModel(
+      id: 1,
+      email: faker.internet.safeEmail(),
+      password: faker.internet.password(),
+      phone: faker.phoneNumber.us(),
+      username: faker.person.name(),
     );
     count++;
   });
@@ -77,27 +86,20 @@ void main() {
   group('On Get Single => ', () {
     test('Compare model data', () async {
       try {
-        final response = await client.onGetSingle<PostModel>(
+        final first = await client.onGetSingle<PostModel>(
           model: PostModel(),
           extraUri: 'posts/1',
           identifier: firstIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.modelResponse, isA<PostModel?>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
-    });
-
-    test('Compare response (http client)', () async {
-      try {
-        final response = await client.onGetSingle<PostModel>(
-          model: PostModel(),
-          extraUri: 'posts/1',
-          identifier: firstIdentifier,
+        final second = await client.onGetSingle<ProductsModel>(
+          model: ProductsModel(),
+          extraUri: 'users/1',
+          identifier: secondIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.completeResponse, isA<Response>());
+        expect(first.modelResponse, isA<PostModel?>());
+        expect(second.modelResponse, isA<ProductsModel?>());
       } catch (e) {
         expect(e, isA<DioError>());
       }
@@ -107,27 +109,20 @@ void main() {
   group('On Get Collection => ', () {
     test('Compare model data', () async {
       try {
-        final response = await client.onGetCollection<PostModel>(
+        final first = await client.onGetCollection<PostModel>(
           model: PostModel(),
           extraUri: 'posts',
           identifier: firstIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.modelResponseAsList, isA<List<PostModel?>>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
-    });
-
-    test('Compare response (http client)', () async {
-      try {
-        final response = await client.onGetCollection<PostModel>(
-          model: PostModel(),
-          extraUri: 'posts',
-          identifier: firstIdentifier,
+        final second = await client.onGetCollection<ProductsModel>(
+          model: ProductsModel(),
+          extraUri: 'users',
+          identifier: secondIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.completeResponse, isA<Response>());
+        expect(first.modelResponseAsList, isA<List<PostModel?>>());
+        expect(second.modelResponseAsList, isA<List<ProductsModel?>>());
       } catch (e) {
         expect(e, isA<DioError>());
       }
@@ -137,14 +132,22 @@ void main() {
   group('On Post => ', () {
     test('Return model', () async {
       try {
-        final response = await client.onPost<PostModel>(
+        final first = await client.onPost<PostModel>(
           model: fakerModel,
           extraUri: 'posts',
           returnModel: true,
           identifier: firstIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.modelResponse, isA<PostModel>());
+        final second = await client.onPost<ProductsModel>(
+          model: prodFakerModel,
+          extraUri: 'users',
+          returnModel: true,
+          identifier: firstIdentifier,
+          apiOption: HttpConfigOptions.manyApiPaths,
+        );
+        expect(first.modelResponse, isA<PostModel>());
+        expect(second.modelResponse, isA<ProductsModel>());
       } catch (e) {
         expect(e, isA<DioError>());
       }
@@ -169,29 +172,22 @@ void main() {
   group('On Put => ', () {
     test('Return model', () async {
       try {
-        final response = await client.onPut<PostModel>(
+        final first = await client.onPut<PostModel>(
           model: fakerModel,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.modelResponse, isA<PostModel>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
-    });
-
-    test('Compare response (http client)', () async {
-      try {
-        final response = await client.onPut<PostModel>(
-          model: fakerModel,
-          extraUri: 'posts/${fakerModel.id}',
+        final second = await client.onPut<ProductsModel>(
+          model: prodFakerModel,
+          extraUri: 'posts/${prodFakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.completeResponse, isA<Response>());
+        expect(first.modelResponse, isA<PostModel>());
+        expect(second.modelResponse, isA<ProductsModel>());
       } catch (e) {
         expect(e, isA<DioError>());
       }
@@ -201,14 +197,22 @@ void main() {
   group('On Patch => ', () {
     test('Return model', () async {
       try {
-        final response = await client.onPatch<PostModel>(
+        final first = await client.onPatch<PostModel>(
           model: fakerModel,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.modelResponse, isA<PostModel>());
+        final second = await client.onPatch<ProductsModel>(
+          model: prodFakerModel,
+          extraUri: 'users/${prodFakerModel.id}',
+          returnModel: true,
+          identifier: firstIdentifier,
+          apiOption: HttpConfigOptions.manyApiPaths,
+        );
+        expect(first.modelResponse, isA<PostModel>());
+        expect(second.modelResponse, isA<ProductsModel>());
       } catch (e) {
         expect(e, isA<DioError>());
       }
@@ -233,12 +237,18 @@ void main() {
   group('On Delete => ', () {
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onDelete(
+        final first = await client.onDelete(
           extraUri: 'posts/${fakerModel.id}',
           identifier: firstIdentifier,
           apiOption: HttpConfigOptions.manyApiPaths,
         );
-        expect(response.completeResponse, isA<Response>());
+        final second = await client.onDelete(
+          extraUri: 'users/${prodFakerModel.id}',
+          identifier: firstIdentifier,
+          apiOption: HttpConfigOptions.manyApiPaths,
+        );
+        expect(first.completeResponse, isA<Response>());
+        expect(second.completeResponse, isA<Response>());
       } catch (e) {
         expect(e, isA<DioError>());
       }
