@@ -39,7 +39,7 @@ void main() {
           apiPath: 'https://jsonplaceholder.typicode.com',
           identifier: secondIdentifier,
           // disable the logger just so you don't see all the requests in the console
-          includeLogger: false,
+          // includeLogger: false,
         ),
       ],
     );
@@ -52,6 +52,26 @@ void main() {
       body: faker.lorem.sentences(4).join(' '),
     );
     count++;
+  });
+
+  group('Change on board', () {
+    test('Change Headers', () async {
+      try {
+        // add headers
+        EasyHttpSettings.addHeadersManyClient(identifier: firstIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+        EasyHttpSettings.addHeadersManyClient(identifier: secondIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+
+        // update header
+        EasyHttpSettings.updateHeadersManyClient(identifier: firstIdentifier, key: 'jwt', value: 'poiuytrewq');
+        EasyHttpSettings.updateHeadersManyClient(identifier: secondIdentifier, key: 'api_key', value: '174091u1j2e091j2');
+
+        // remove header
+        EasyHttpSettings.removeHeadersManyClient(identifier: firstIdentifier, key: 'api_key');
+        EasyHttpSettings.removeHeadersManyClient(identifier: secondIdentifier, key: 'jwt');
+      } catch (e) {
+        expect(e, isA<DioError>());
+      }
+    });
   });
 
   group('On Get Single => ', () {

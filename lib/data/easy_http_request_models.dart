@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 class EasyHttpConfigBase {
   /// Constructor
   EasyHttpConfigBase({
-    this.headers,
+    this.headers = const {},
     this.timeOut,
     this.validStatus,
     this.followRedirect,
@@ -12,7 +12,7 @@ class EasyHttpConfigBase {
   });
 
   /// Headers you want to include in your queries
-  final Map<String, dynamic>? headers;
+  Map<String, dynamic> headers;
 
   /// Timeout to request data from the server
   final int? timeOut;
@@ -48,16 +48,16 @@ class EasyHttpConfig extends EasyHttpConfigBase {
     required this.identifier,
     required this.apiPath,
     headers,
-    timeOut,
-    validStatus,
-    followRedirect,
-    includeLogger,
+    timeOut = 30 * 1000,
+    validStatus = 204,
+    followRedirect = false,
+    includeLogger = true,
   }) : super(
           headers: headers ?? const {},
-          timeOut: timeOut ?? 30 * 1000,
-          validStatus: validStatus ?? 204,
-          followRedirect: followRedirect ?? false,
-          includeLogger: includeLogger ?? true,
+          timeOut: timeOut,
+          validStatus: validStatus,
+          followRedirect: followRedirect,
+          includeLogger: includeLogger,
         );
 
   /// Base URL of your service

@@ -32,6 +32,21 @@ void main() {
     );
   });
 
+  group('Change on board', () {
+    test('Change Headers', () async {
+      try {
+        // add headers
+        EasyHttpSettings.addHeadersSingleClient(newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+        // update header
+        EasyHttpSettings.updateHeadersSingleClient(key: 'jwt', value: 'poiuytrewq');
+        // remove header
+        EasyHttpSettings.removeHeadersSingleClient(key: 'jwt');
+      } catch (e) {
+        expect(e, isA<DioError>());
+      }
+    });
+  });
+
   group('On Get Single => ', () {
     test('Compare model data', () async {
       try {

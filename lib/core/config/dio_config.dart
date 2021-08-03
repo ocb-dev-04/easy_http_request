@@ -32,22 +32,55 @@ class EasyHttpClient {
         return ManyClientInstances(dio: _setDio(e), identifier: e.identifier, config: e);
       }).toList();
 
-  /// Change http client settings when client was initialized (single client)
-  static void changeSingleHttpClientConfig({required EasyChangeHttpConfig config}) => singleClient == null
-      ? throw Exception(KMessages.duplicatedIdentifier.replaceAll('@', config.identifier))
-      : setSingleClient(config: _setToChangeHttpConfig(config, singleClient!.config));
+  /// Add header when client was initialized (single client)
+  static void addHeadersSingleClient({required Map<String, dynamic> newHeaders}) => setSingleClient(config: _addNewHeaders(newHeaders, singleClient!.config));
 
-  /// Change http client settings when client was initialized (collection client)
-  static void changeManyHttpClientConfig({required EasyChangeHttpConfig config}) {
-    _duplicatedIdentifier(newIdentifier: config.identifier);
-    final oldConfig =
-        manyClient.firstWhere(((element) => element.identifier == config.identifier), orElse: () => throw Exception(KMessages.notFoundIdentifier));
+  /// Update header when client was initialized (single client)
+  static void updateHeadersSingleClient({required String key, required dynamic value}) => setSingleClient(
+          config: _updateOrRemoveNewHeaders(
+        key: key,
+        valueIfToUpdate: value,
+        oldConfig: singleClient!.config,
+      ));
+
+  /// Remove header when client was initialized (single client)
+  static void removeHeadersSingleClient({required String key}) => setSingleClient(
+          config: _updateOrRemoveNewHeaders(
+        key: key,
+        oldConfig: singleClient!.config,
+        toUpdate: false,
+      ));
+
+  /// Add header when client was initialized (collection client)
+  static void addHeadersManyClient({required String identifier, required Map<String, dynamic> newHeaders}) {
+    _duplicatedIdentifier(newIdentifier: identifier);
+    final oldConfig = manyClient.firstWhere(((element) => element.identifier == identifier), orElse: () => throw Exception(KMessages.notFoundIdentifier));
     manyClient
-      ..removeWhere((element) => element.identifier == config.identifier)
+      ..removeWhere((element) => element.identifier == identifier)
       ..add(ManyClientInstances(
-          dio: _setDio(_setToChangeHttpConfig(config, oldConfig.config)),
-          identifier: config.identifier,
-          config: _setToChangeHttpConfig(config, oldConfig.config)));
+          dio: _setDio(_addNewHeaders(newHeaders, oldConfig.config)), identifier: identifier, config: _addNewHeaders(newHeaders, oldConfig.config)));
+  }
+
+  /// Add header when client was initialized (collection client)
+  static void updateHeadersManyClient({required String identifier, required String key, required dynamic value}) {
+    _duplicatedIdentifier(newIdentifier: identifier);
+
+    final oldConfig = manyClient.firstWhere(((element) => element.identifier == identifier), orElse: () => throw Exception(KMessages.notFoundIdentifier));
+    final newConfig = _updateOrRemoveNewHeaders(key: key, valueIfToUpdate: value, oldConfig: oldConfig.config);
+
+    manyClient
+      ..removeWhere((element) => element.identifier == identifier)
+      ..add(ManyClientInstances(dio: _setDio(newConfig), identifier: identifier, config: newConfig));
+  }
+
+  /// Add header when client was initialized (collection client)
+  static void removeHeadersManyClient({required String identifier, required String key}) {
+    _duplicatedIdentifier(newIdentifier: identifier);
+    final oldConfig = manyClient.firstWhere(((element) => element.identifier == identifier), orElse: () => throw Exception(KMessages.notFoundIdentifier));
+    final newConfig = _updateOrRemoveNewHeaders(key: key, toUpdate: false, oldConfig: oldConfig.config);
+    manyClient
+      ..removeWhere((element) => element.identifier == identifier)
+      ..add(ManyClientInstances(dio: _setDio(newConfig), identifier: identifier, config: newConfig));
   }
 
   static bool _duplicatedIdentifier({required String newIdentifier}) => manyClient.any((element) => element.identifier == newIdentifier);
@@ -62,19 +95,21 @@ class EasyHttpClient {
     return dio;
   }
 
-  static EasyHttpConfig _setToChangeHttpConfig(EasyChangeHttpConfig config, EasyHttpConfig oldConfig) => EasyHttpConfig(
-      apiPath: config.apiPath ?? oldConfig.apiPath,
-      identifier: config.identifier,
-      headers: oldConfig.headers == null
-          ? config.headers
-          : () {
-              oldConfig.headers!.addAll(config.headers!);
-              return oldConfig;
-            },
-      followRedirect: config.followRedirect ?? oldConfig.followRedirect,
-      includeLogger: config.includeLogger ?? oldConfig.includeLogger,
-      timeOut: config.timeOut ?? oldConfig.timeOut,
-      validStatus: config.validStatus ?? oldConfig.validStatus);
+  static EasyHttpConfig _addNewHeaders(Map<String, dynamic> newHeaders, EasyHttpConfig oldConfig) {
+    newHeaders.addAll(oldConfig.headers);
+    oldConfig.headers = newHeaders;
+    return oldConfig;
+  }
+
+  static EasyHttpConfig _updateOrRemoveNewHeaders({
+    required String key,
+    required EasyHttpConfig oldConfig,
+    String valueIfToUpdate = '',
+    bool toUpdate = true,
+  }) {
+    toUpdate ? oldConfig.headers.update(key, (value) => value = valueIfToUpdate) : oldConfig.headers.remove(key);
+    return oldConfig;
+  }
 }
 
 /// Class for create instances of dio and respective label (identifiers)
@@ -83,10 +118,10 @@ class SingleClientInstance {
   SingleClientInstance({required this.dio, required this.config});
 
   /// Dio instance
-  final Dio dio;
+  Dio dio;
 
   /// Config for http client
-  final EasyHttpConfig config;
+  EasyHttpConfig config;
 }
 
 /// Class for create instances of dio and respective label (identifiers)
@@ -95,11 +130,11 @@ class ManyClientInstances {
   ManyClientInstances({required this.dio, required this.identifier, required this.config});
 
   /// Dio instance
-  final Dio dio;
+  Dio dio;
 
   /// Config for http client
-  final EasyHttpConfig config;
+  EasyHttpConfig config;
 
   /// Api path identifier
-  final String identifier;
+  String identifier;
 }
