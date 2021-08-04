@@ -1,4 +1,4 @@
-import 'package:easy_http_request/data/easy_http_request_models.dart';
+import 'package:easy_http_request/src/models/easy_http_request_models.dart';
 import 'package:easy_http_request/easy_http_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 

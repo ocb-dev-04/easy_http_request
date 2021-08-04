@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_formatter/dio_http_formatter.dart';
-import 'package:easy_http_request/core/constants/messages.dart';
+import 'package:easy_http_request/src/constants/messages.dart';
 
-import 'package:easy_http_request/data/easy_http_request_models.dart';
+import 'package:easy_http_request/src/models/easy_http_request_models.dart';
 
 /// Class to configure the http client (Dio)
 class EasyHttpClient {
   /// Dio instance for single client config
-  static late SingleClientInstance? singleClient;
+  static late SingleClientInstance singleClient;
 
   /// Dio instance for many client config
   static List<ManyClientInstances> manyClient = List<ManyClientInstances>.empty(growable: true);
@@ -33,21 +33,21 @@ class EasyHttpClient {
       }).toList();
 
   /// Add header when client was initialized (single client)
-  static void addHeadersSingleClient({required Map<String, dynamic> newHeaders}) => setSingleClient(config: _addNewHeaders(newHeaders, singleClient!.config));
+  static void addHeadersSingleClient({required Map<String, dynamic> newHeaders}) => setSingleClient(config: _addNewHeaders(newHeaders, singleClient.config));
 
   /// Update header when client was initialized (single client)
   static void updateHeadersSingleClient({required String key, required dynamic value}) => setSingleClient(
           config: _updateOrRemoveNewHeaders(
         key: key,
         valueIfToUpdate: value,
-        oldConfig: singleClient!.config,
+        oldConfig: singleClient.config,
       ));
 
   /// Remove header when client was initialized (single client)
   static void removeHeadersSingleClient({required String key}) => setSingleClient(
           config: _updateOrRemoveNewHeaders(
         key: key,
-        oldConfig: singleClient!.config,
+        oldConfig: singleClient.config,
         toUpdate: false,
       ));
 

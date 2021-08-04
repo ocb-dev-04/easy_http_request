@@ -1,4 +1,4 @@
-import 'package:easy_http_request/data/easy_http_request_models.dart';
+import 'package:easy_http_request/src/models/easy_http_request_models.dart';
 import 'package:easy_http_request/easy_http_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -67,16 +67,16 @@ void main() {
     test('Change Headers', () async {
       try {
         // add headers
-        EasyHttpSettings.addHeadersManyClient(identifier: firstIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
-        EasyHttpSettings.addHeadersManyClient(identifier: secondIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+        EasyHeadersManager.addHeadersManyClient(identifier: firstIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+        EasyHeadersManager.addHeadersManyClient(identifier: secondIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
 
         // update header
-        EasyHttpSettings.updateHeadersManyClient(identifier: firstIdentifier, key: 'jwt', value: 'poiuytrewq');
-        EasyHttpSettings.updateHeadersManyClient(identifier: secondIdentifier, key: 'api_key', value: '174091u1j2e091j2');
+        EasyHeadersManager.updateHeadersManyClient(identifier: firstIdentifier, key: 'jwt', value: 'poiuytrewq');
+        EasyHeadersManager.updateHeadersManyClient(identifier: secondIdentifier, key: 'api_key', value: '174091u1j2e091j2');
 
         // remove header
-        EasyHttpSettings.removeHeadersManyClient(identifier: firstIdentifier, key: 'api_key');
-        EasyHttpSettings.removeHeadersManyClient(identifier: secondIdentifier, key: 'jwt');
+        EasyHeadersManager.removeHeadersManyClient(identifier: firstIdentifier, key: 'api_key');
+        EasyHeadersManager.removeHeadersManyClient(identifier: secondIdentifier, key: 'jwt');
       } catch (e) {
         expect(e, isA<DioError>());
       }
@@ -86,17 +86,17 @@ void main() {
   group('On Get Single => ', () {
     test('Compare model data', () async {
       try {
-        final first = await client.onGetSingle<PostModel>(
+        final first = await client.requestWithManyPATH<PostModel>(
           model: PostModel(),
-          extraUri: 'posts/1',
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
+          requestType: EasyHttpType.getSingle,
+          extraUri: 'posts/1',
         );
-        final second = await client.onGetSingle<ProductsModel>(
+        final second = await client.requestWithManyPATH<ProductsModel>(
           model: ProductsModel(),
-          extraUri: 'users/1',
           identifier: secondIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
+          requestType: EasyHttpType.getSingle,
+          extraUri: 'users/1',
         );
         expect(first.modelResponse, isA<PostModel?>());
         expect(second.modelResponse, isA<ProductsModel?>());
@@ -109,17 +109,17 @@ void main() {
   group('On Get Collection => ', () {
     test('Compare model data', () async {
       try {
-        final first = await client.onGetCollection<PostModel>(
+        final first = await client.requestWithManyPATH<PostModel>(
           model: PostModel(),
+          requestType: EasyHttpType.getCollection,
           extraUri: 'posts',
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
-        final second = await client.onGetCollection<ProductsModel>(
+        final second = await client.requestWithManyPATH<ProductsModel>(
           model: ProductsModel(),
+          requestType: EasyHttpType.getCollection,
           extraUri: 'users',
           identifier: secondIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
         expect(first.modelResponseAsList, isA<List<PostModel?>>());
         expect(second.modelResponseAsList, isA<List<ProductsModel?>>());
@@ -132,19 +132,19 @@ void main() {
   group('On Post => ', () {
     test('Return model', () async {
       try {
-        final first = await client.onPost<PostModel>(
+        final first = await client.requestWithManyPATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.post,
           extraUri: 'posts',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
-        final second = await client.onPost<ProductsModel>(
+        final second = await client.requestWithManyPATH<ProductsModel>(
           model: prodFakerModel,
+          requestType: EasyHttpType.post,
           extraUri: 'users',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
         expect(first.modelResponse, isA<PostModel>());
         expect(second.modelResponse, isA<ProductsModel>());
@@ -155,12 +155,12 @@ void main() {
 
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onPost<PostModel>(
+        final response = await client.requestWithManyPATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.post,
           extraUri: 'posts',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
@@ -172,19 +172,19 @@ void main() {
   group('On Put => ', () {
     test('Return model', () async {
       try {
-        final first = await client.onPut<PostModel>(
+        final first = await client.requestWithManyPATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.put,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
-        final second = await client.onPut<ProductsModel>(
+        final second = await client.requestWithManyPATH<ProductsModel>(
           model: prodFakerModel,
+          requestType: EasyHttpType.put,
           extraUri: 'posts/${prodFakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
         expect(first.modelResponse, isA<PostModel>());
         expect(second.modelResponse, isA<ProductsModel>());
@@ -197,19 +197,19 @@ void main() {
   group('On Patch => ', () {
     test('Return model', () async {
       try {
-        final first = await client.onPatch<PostModel>(
+        final first = await client.requestWithManyPATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.patch,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
-        final second = await client.onPatch<ProductsModel>(
+        final second = await client.requestWithManyPATH<ProductsModel>(
           model: prodFakerModel,
+          requestType: EasyHttpType.patch,
           extraUri: 'users/${prodFakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
         expect(first.modelResponse, isA<PostModel>());
         expect(second.modelResponse, isA<ProductsModel>());
@@ -220,12 +220,12 @@ void main() {
 
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onPatch<PostModel>(
+        final response = await client.requestWithManyPATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.patch,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
@@ -237,15 +237,17 @@ void main() {
   group('On Delete => ', () {
     test('Compare response (http client)', () async {
       try {
-        final first = await client.onDelete(
+        final first = await client.requestWithManyPATH<PostModel>(
+          model: PostModel(),
+          requestType: EasyHttpType.delete,
           extraUri: 'posts/${fakerModel.id}',
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
-        final second = await client.onDelete(
+        final second = await client.requestWithManyPATH<ProductsModel>(
+          model: ProductsModel(),
+          requestType: EasyHttpType.delete,
           extraUri: 'users/${prodFakerModel.id}',
           identifier: firstIdentifier,
-          apiOption: HttpConfigOptions.manyApiPaths,
         );
         expect(first.completeResponse, isA<Response>());
         expect(second.completeResponse, isA<Response>());

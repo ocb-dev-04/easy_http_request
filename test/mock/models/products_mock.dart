@@ -1,4 +1,4 @@
-import 'package:easy_http_request/core/parser/http_parser.dart';
+import 'package:easy_http_request/easy_http_request.dart';
 
 class ProductsModel implements HttpDataParser<ProductsModel> {
   ProductsModel({this.id, this.email, this.username, this.password, this.phone});
