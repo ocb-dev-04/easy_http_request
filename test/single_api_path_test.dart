@@ -36,11 +36,11 @@ void main() {
     test('Change Headers', () async {
       try {
         // add headers
-        EasyHttpSettings.addHeadersSingleClient(newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+        EasyHeadersManager.addHeadersSingleClient(newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
         // update header
-        EasyHttpSettings.updateHeadersSingleClient(key: 'jwt', value: 'poiuytrewq');
+        EasyHeadersManager.updateHeadersSingleClient(key: 'jwt', value: 'poiuytrewq');
         // remove header
-        EasyHttpSettings.removeHeadersSingleClient(key: 'jwt');
+        EasyHeadersManager.removeHeadersSingleClient(key: 'jwt');
       } catch (e) {
         expect(e, isA<DioError>());
       }
@@ -50,10 +50,10 @@ void main() {
   group('On Get Single => ', () {
     test('Compare model data', () async {
       try {
-        final response = await client.onGetSingle<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: PostModel(),
+          requestType: EasyHttpType.getSingle,
           extraUri: 'posts/1',
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.modelResponse, isA<PostModel?>());
       } catch (e) {
@@ -63,10 +63,10 @@ void main() {
 
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onGetSingle<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: PostModel(),
+          requestType: EasyHttpType.getSingle,
           extraUri: 'posts/1',
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
@@ -81,7 +81,6 @@ void main() {
         final response = await client.onGetCollection<PostModel>(
           model: PostModel(),
           extraUri: 'posts',
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.modelResponseAsList, isA<List<PostModel?>>());
       } catch (e) {
@@ -94,7 +93,6 @@ void main() {
         final response = await client.onGetCollection<PostModel>(
           model: PostModel(),
           extraUri: 'posts',
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
@@ -110,7 +108,6 @@ void main() {
           model: fakerModel,
           extraUri: 'posts',
           returnModel: true,
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.modelResponse, isA<PostModel>());
       } catch (e) {
@@ -124,7 +121,6 @@ void main() {
           model: fakerModel,
           extraUri: 'posts',
           returnModel: true,
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
@@ -140,7 +136,6 @@ void main() {
           model: fakerModel,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.modelResponse, isA<PostModel>());
       } catch (e) {
@@ -154,7 +149,6 @@ void main() {
           model: fakerModel,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
@@ -170,7 +164,6 @@ void main() {
           model: fakerModel,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.modelResponse, isA<PostModel>());
       } catch (e) {
@@ -184,7 +177,6 @@ void main() {
           model: fakerModel,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
@@ -198,7 +190,6 @@ void main() {
       try {
         final response = await client.onDelete(
           extraUri: 'posts/${fakerModel.id}',
-          apiOption: HttpConfigOptions.singleApiPath,
         );
         expect(response.completeResponse, isA<Response>());
       } catch (e) {
