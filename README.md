@@ -1,16 +1,16 @@
-# easy_http_request
+
 A package that simplifies the queries to the apis or web services, you focus on creating the model, this package takes care of the rest.
 
 
-- [easy_http_request](#easy_http_request)
-    - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Initialization](#initialization)
-    - [Combine with Dependency Injection](#combine-with-dependency-injection)
-    - [Configure the model](#configure-the-model)
-    - [Parameters and Response Data](#parameters-and-response-data)
-    - [Examples](#examples)
-    - [License](#license)
+  - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Initialization](#initialization)
+  - [Combine with Dependency Injection](#combine-with-dependency-injection)
+  - [Configure the model](#configure-the-model)
+  - [Parameters and Response Data](#parameters-and-response-data)
+  - [Examples](#examples)
+  - [License](#license)
+  - [Features and bugs](#features-and-bugs)
 
 
 ### Getting Started
@@ -335,3 +335,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Features and bugs
+Please file feature requests and bugs at the [issue tracker](https://github.com/ocb-dev-04/easy_http_request/issues).
