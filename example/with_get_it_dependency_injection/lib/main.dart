@@ -9,10 +9,11 @@ const String mainApiPath = 'MAIN_API';
 
 void main() {
   // package init
-  EasyHttpSettings.initWithSigleApi(
-    config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath),
-  );
-
+  EasyHttpSettings.initWithSingleApi(config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath));
+  EasyHttpSettings.initWithManyApi(config: [
+    EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: firstIdentifier),
+    EasyHttpConfig(apiPath: 'https://fakestoreapi.com', identifier: secondIdentifier)
+  ]);
   DIManager.setup();
   runApp(App());
 }

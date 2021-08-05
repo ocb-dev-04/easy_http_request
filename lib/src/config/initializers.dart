@@ -4,7 +4,7 @@ import 'package:easy_http_request/src/models/easy_http_request_models.dart';
 /// Class initializer at package
 class EasyHttpSettings {
   /// Method to initialize the package with just a endpoint (base url - baseApi)
-  static void initWithSigleApi({required EasyHttpConfig config}) => EasyHttpClient.setSingleClient(config: config);
+  static void initWithSingleApi({required EasyHttpConfig config}) => EasyHttpClient.setSingleClient(config: config);
 
   /// Method to initialize the package with many a endpoint (base url - baseApi)
   static void initWithManyApi({required List<EasyHttpConfig> config}) => EasyHttpClient.setManyClient(config: config);

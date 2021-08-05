@@ -33,18 +33,35 @@ First, import dependeny:
 import 'package:easy_http_request/easy_http_request.dart';
 ```
 
-Then:
+Then if you only use a <strong>SINGLE PATH API</strong> you can do this:
 
 ```dart
-EasyHttpRequest.init(config: HttpConfigData(baseApi: 'https://jsonplaceholder.typicode.com'));
+const String mainApiPath = 'MAIN_API';
+EasyHttpSettings.initWithSingleApi(config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath));
+```
+
+Or, if you need to use a <strong>COLLECTION OF PATH APIS</strong>, you can do this:
+
+```dart
+const String firstIdentifier = 'FirstApiPath';
+const String secondIdentifier = 'SecondApiPath';
+
+EasyHttpSettings.initWithManyApi(config: [
+    EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: firstIdentifier),
+    EasyHttpConfig(apiPath: 'https://fakestoreapi.com', identifier: secondIdentifier)
+]);
 ```
 
 You can add the initialization in the main method (for example)
 
 ```dart
-void main() async {
-  EasyHttpRequest.init(config: HttpConfigData(baseApi: 'https://jsonplaceholder.typicode.com'));
-  runApp(const App());
+const String mainApiPath = 'MAIN_API';
+
+void main() {
+  // package init
+  EasyHttpSettings.initWithSingleApi(config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath));
+
+  runApp(App());
 }
 ```
 
@@ -52,7 +69,8 @@ The <strong>HttpConfigData</strong> has more properties like:
 
 ```dart
 HttpConfigData({
-    required this.baseApi,
+    required this.identifier,
+    required this.apiPath,
     this.headers = const {},
     this.timeOut = 30 * 1000,
     this.validStatus = 204, 
@@ -142,7 +160,7 @@ class PostModel {
 This is the simple change that we will make:
 
 ```dart
-import 'package:easy_http_request/core/parser/http_parser.dart';
+import 'package:easy_http_request/easy_http_request.dart';
 
 class PostModel implements HttpDataParser<PostModel> {
   PostModel({
@@ -250,65 +268,110 @@ EasyHttpRequestResponse({
   });
 ```
 
-* completeResponse => Reply directly from the http client. Contains statusCode, headers and more
-* modelResponse => Returns the model if applicable for return. Example in the onGetOne returns the model. In the case of onPost, onPut and onPatch it will depend on what you need and that your service returns the model
-* modelResponseAsList => Returns a collection of the model. Only value is returned in the onGetMany
+* <strong>completeResponse</strong> => Reply directly from the http client. Contains statusCode, headers and more
+* <strong>modelResponse</strong> => Returns the model if applicable for return. Example in the onGetOne returns the model. In the case of onPost, onPut and onPatch it will depend on what you need and that your service returns the model
+* <strong>modelResponseAsList</strong> => Returns a collection of the model. Only value is returned in the onGetMany
 
 
 ### Examples
 
-Get <strong>SINGLE</strong> model from API using onGetOne method:
+##### Http Request
+
+There are two methods of making requests:
+
+1. To use the single http client.
+
 ```dart
-final response = await easyHttp.onGetOne<PostModel>(extraUri: 'posts/$id', model: PostModel());
+final response = await easyHttpInstance.requestWithSinglePATH<PostModel(
+  model: PostModel(), 
+  requestType: EasyHttpType.getSingle, 
+  extraUri: '$_extraUri/$id'
+);
 ```
 
-Get <strong>COLLECTION</strong> from API using onGetMany method:
+2. To use one of the customer collection.
+
 ```dart
-final response = await easyHttp.onGetMany<PostModel>(extraUri: 'posts', model: PostModel());
+final response = await easyHttpInstance.requestWithManyPATH<PostModel>(
+  model: PostModel(),
+  identifier: firstIdentifier,
+  requestType: EasyHttpType.getSingle,
+  extraUri: 'posts/1',
+);
+```
+To execute the different types of request you only have to EasyHttpType which will allow you to choose if the request is:
+
+<strong>getSingle, getCollection, post, put, patch, delete.</strong>
+
+Example:
+
+```
+- NOTE: Applies both for when using a single or a collection of http clients
 ```
 
-Send <strong>POST</strong> to API using onPost method:
 ```dart
-final fakerModel = PostModel(
-      id: 1,
-      userId: faker.randomGenerator.integer(4000, min: 100),
-      title: faker.company.name(),
-      body: faker.lorem.sentences(4).join(' '),
-    );
-final response = await easyHttp.onPost<PostModel>(extraUri: 'posts', model: fakerModel);
+// getSingle:
+final response = await easyHttpInstance.requestWithSinglePATH<PostModel>(model: PostModel(), requestType: EasyHttpType.getSingle, extraUri: '$_extraUri/$id');
+
+// getCollection
+final response = await easyHttpInstance.requestWithSinglePATH<PostModel>(model: PostModel(), requestType: EasyHttpType.getCollection, extraUri: _extraUri);
+
+// post
+final response =
+          await easyHttpInstance.requestWithSinglePATH<PostModel>(model: fakerModel, requestType: EasyHttpType.post, extraUri: _extraUri, returnModel: true);
+
+// put
+final response = await easyHttpInstance.requestWithSinglePATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.put, extraUri: '$_extraUri/${fakerModel.id}', returnModel: true);
+
+// patch
+final response = await easyHttpInstance.requestWithSinglePATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.patch, extraUri: '$_extraUri/${fakerModel.id}', returnModel: true);
+
+// delete
+final response = await easyHttpInstance.requestWithSinglePATH<PostModel>(model: PostModel(), requestType: EasyHttpType.delete, extraUri: '$_extraUri/$id');
 ```
 
-Send <strong>PUT</strong> to API using onPut method:
+In case that you use manyHttpPath just do this:
+
 ```dart
-final fakerModel = PostModel(
-      id: 1,
-      userId: faker.randomGenerator.integer(4000, min: 100),
-      title: faker.company.name(),
-      body: faker.lorem.sentences(4).join(' '),
-    );
-final response = await easyHttp.onPut<PostModel>(extraUri: 'posts/$id', model: fakerModel);
+// getSingle:
+final response = await easyHttpInstance.requestWithManyPATH<PostModel>(
+          model: PostModel(),// model
+          identifier: firstIdentifier, // include instance identifier
+          requestType: EasyHttpType.getSingle, // request type
+          extraUri: 'posts/1',
+        );
+
 ```
 
-Send <strong>PATCH</strong> to API using onPatch method:
+
+##### Manage headers
+Once the http clients is instantiated, you can modify their headers:
+
+  * In the case that it is a single http client
 ```dart
-final fakerModel = PostModel(
-      id: 1,
-      userId: faker.randomGenerator.integer(4000, min: 100),
-      title: faker.company.name(),
-      body: faker.lorem.sentences(4).join(' '),
-    );
-final response = await easyHttp.onPatch<PostModel>(extraUri: 'posts/$id', model: fakerModel);
+// add headers
+EasyHeadersManager.addHeadersSingleClient(newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+// update header
+EasyHeadersManager.updateHeadersSingleClient(key: 'jwt', value: 'poiuytrewq');
+// remove header
+EasyHeadersManager.removeHeadersSingleClient(key: 'jwt');
 ```
 
-Send <strong>DELETE</strong> to API using onDelete method:
+  * In the case that it is a collection of http clients, you only have to add the identifier field, which will help to identify which instance of the http clinet the header will be modified
 ```dart
-// onDelete not need send model
-final response = await easyHttp.onDelete(extraUri: 'posts/$id');
-```
+// add headers
+EasyHeadersManager.addHeadersManyClient(identifier: firstIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
 
+// update header
+EasyHeadersManager.updateHeadersManyClient(identifier: secondIdentifier, key: 'api_key', value: '174091u1j2e091j2');
+
+// remove header
+EasyHeadersManager.removeHeadersManyClient(identifier: secondIdentifier, key: 'jwt');
+```
 
 You can find a complete example [here](./example/with_get_it_dependency_injection/lib/main.dart)
-
 
 ### License
 

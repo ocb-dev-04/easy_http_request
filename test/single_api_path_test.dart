@@ -14,7 +14,7 @@ void main() {
   const identifier = 'SingleApiPath';
 
   setUp(() {
-    EasyHttpSettings.initWithSigleApi(
+    EasyHttpSettings.initWithSingleApi(
       config: EasyHttpConfig(
         apiPath: 'https://jsonplaceholder.typicode.com',
         identifier: identifier,
