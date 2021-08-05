@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:faker/faker.dart';
 
-import 'package:easy_http_request/data/easy_http_request_models.dart';
 import 'package:easy_http_request/easy_http_request.dart';
-import 'package:easy_http_request/core/parser/http_parser.dart';
 
 const String mainApiPath = 'MAIN_API';
 
@@ -14,10 +12,6 @@ void main() {
   EasyHttpSettings.initWithSigleApi(
     config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath),
   );
-  // EasyHttpSettings.initWithManyApi(config: [
-  //   EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath),
-  //   EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath),
-  // ]);
 
   DIManager.setup();
   runApp(App());
@@ -110,13 +104,9 @@ class HttpServices {
 
   Future<void> getOne({required int id}) async {
     try {
-      EasyHttpSettings.changeSingleHttpClientConfig(
-        config: EasyChangeHttpConfig(
-          identifier: mainApiPath,
-          headers: {"jwt": "qwertyuiop"},
-        ),
-      );
-      final response = await _httpContract.onGetSingle<PostModel>(extraUri: '$_extraUri/$id', model: PostModel());
+      EasyHeadersManager.addHeadersSingleClient(newHeaders: {"jwt": "qwertyuiop"});
+      final response =
+          await _httpContract.requestWithSinglePATH<PostModel>(model: PostModel(), requestType: EasyHttpType.getSingle, extraUri: '$_extraUri/$id');
       final justOne = response.modelResponse!;
 
       _showInfo(justOne.title!, justOne.body!, 'getOne');
@@ -127,13 +117,9 @@ class HttpServices {
 
   Future<void> getCollection() async {
     try {
-      EasyHttpSettings.changeSingleHttpClientConfig(
-        config: EasyChangeHttpConfig(
-          identifier: mainApiPath,
-          headers: {"api_path": "poiuytrewq"},
-        ),
-      );
-      final response = await _httpContract.onGetCollection<PostModel>(extraUri: _extraUri, model: PostModel());
+      EasyHeadersManager.addHeadersSingleClient(newHeaders: {"api_path": "poiuytrewq"});
+
+      final response = await _httpContract.requestWithSinglePATH<PostModel>(model: PostModel(), requestType: EasyHttpType.getCollection, extraUri: _extraUri);
       final collection = response.modelResponseAsList!;
       _showInfo(collection.last.title!, collection.last.body!, 'getCollection');
     } catch (e) {
@@ -144,13 +130,8 @@ class HttpServices {
   Future<void> post() async {
     try {
       // If your service return model is created and you need to update the UI with this data, you can do this
-      final response = await _httpContract.onPost<PostModel>(extraUri: _extraUri, model: fakerModel, returnModel: true);
-
-      // Just create
-      // final justCreate = await _httpContract.onPost<PostModel>(extraUri: 'posts', model: fakerModel /* returnModel is false by default */);
-
-      // You can also send query Params instead of sending ids and others directly in the path
-      // final withQueryParams = await _httpContract.onPost<PostModel>(extraUri: 'posts', queryParams: {"id": fakerModel.id}, model: fakerModel /* returnModel is false by default */);
+      final response =
+          await _httpContract.requestWithSinglePATH<PostModel>(model: fakerModel, requestType: EasyHttpType.post, extraUri: _extraUri, returnModel: true);
 
       // if service return a 201 Created status code (is just example)
       if (response.completeResponse!.statusCode == 201) {
@@ -166,13 +147,8 @@ class HttpServices {
   Future<void> put({required int id}) async {
     try {
       // If your service return model is up to date and you need to update the UI with this data, you can do this
-      final response = await _httpContract.onPut<PostModel>(extraUri: '$_extraUri/${fakerModel.id}', model: fakerModel, returnModel: true);
-
-      // Just update
-      // final justUpdate = await _httpContract.onPut<PostModel>(extraUri: 'posts/${fakerModel.id}', model: fakerModel /* returnModel is false by default */);
-
-      // You can also send query Params instead of sending ids and others directly in the path
-      // final withQueryParams = await _httpContract.onPut<PostModel>(extraUri: 'posts', queryParams: {"id": fakerModel.id}, model: fakerModel /* returnModel is false by default */);
+      final response = await _httpContract.requestWithSinglePATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.put, extraUri: '$_extraUri/${fakerModel.id}', returnModel: true);
 
       // if service return a 200 OK status code (is just example)
       if (response.completeResponse!.statusCode == 200) {
@@ -188,13 +164,8 @@ class HttpServices {
   Future<void> patch({required int id}) async {
     try {
       // If your service return model is up to date and you need to update the UI with this data, you can do this
-      final response = await _httpContract.onPatch<PostModel>(extraUri: '$_extraUri/${fakerModel.id}', model: fakerModel, returnModel: true);
-
-      // Just update
-      // final justUpdate = await _httpContract.onPatch<PostModel>(extraUri: 'posts/${fakerModel.id}', model: fakerModel /* returnModel is false by default */);
-
-      // You can also send query Params instead of sending ids and others directly in the path
-      // final withQueryParams = await _httpContract.onPatch<PostModel>(extraUri: 'posts', queryParams: {"id": fakerModel.id}, model: fakerModel /* returnModel is false by default */);
+      final response = await _httpContract.requestWithSinglePATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.patch, extraUri: '$_extraUri/${fakerModel.id}', returnModel: true);
 
       // if service return a 200 OK status code (is just example)
       if (response.completeResponse!.statusCode == 200) {
@@ -209,7 +180,7 @@ class HttpServices {
 
   Future<void> delete({required int id}) async {
     try {
-      final response = await _httpContract.onDelete(extraUri: '$_extraUri/$id');
+      final response = await _httpContract.requestWithSinglePATH<PostModel>(model: PostModel(), requestType: EasyHttpType.delete, extraUri: '$_extraUri/$id');
 
       // if service return a 200 OK status code (is just example)
       if (response.completeResponse!.statusCode == 200) {

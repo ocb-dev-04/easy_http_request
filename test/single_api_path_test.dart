@@ -78,8 +78,9 @@ void main() {
   group('On Get Collection => ', () {
     test('Compare model data', () async {
       try {
-        final response = await client.onGetCollection<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: PostModel(),
+          requestType: EasyHttpType.getCollection,
           extraUri: 'posts',
         );
         expect(response.modelResponseAsList, isA<List<PostModel?>>());
@@ -90,8 +91,9 @@ void main() {
 
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onGetCollection<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: PostModel(),
+          requestType: EasyHttpType.getCollection,
           extraUri: 'posts',
         );
         expect(response.completeResponse, isA<Response>());
@@ -104,8 +106,9 @@ void main() {
   group('On Post => ', () {
     test('Return model', () async {
       try {
-        final response = await client.onPost<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.post,
           extraUri: 'posts',
           returnModel: true,
         );
@@ -117,8 +120,9 @@ void main() {
 
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onPost<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.post,
           extraUri: 'posts',
           returnModel: true,
         );
@@ -132,8 +136,9 @@ void main() {
   group('On Put => ', () {
     test('Return model', () async {
       try {
-        final response = await client.onPut<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.put,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
         );
@@ -145,8 +150,9 @@ void main() {
 
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onPut<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.put,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
         );
@@ -160,8 +166,9 @@ void main() {
   group('On Patch => ', () {
     test('Return model', () async {
       try {
-        final response = await client.onPatch<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.patch,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
         );
@@ -173,8 +180,9 @@ void main() {
 
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onPatch<PostModel>(
+        final response = await client.requestWithSinglePATH<PostModel>(
           model: fakerModel,
+          requestType: EasyHttpType.patch,
           extraUri: 'posts/${fakerModel.id}',
           returnModel: true,
         );
@@ -188,7 +196,9 @@ void main() {
   group('On Delete => ', () {
     test('Compare response (http client)', () async {
       try {
-        final response = await client.onDelete(
+        final response = await client.requestWithSinglePATH(
+          model: PostModel(),
+          requestType: EasyHttpType.delete,
           extraUri: 'posts/${fakerModel.id}',
         );
         expect(response.completeResponse, isA<Response>());
