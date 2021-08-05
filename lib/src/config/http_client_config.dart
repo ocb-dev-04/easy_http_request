@@ -105,6 +105,9 @@ class EasyHttpClient {
     String valueIfToUpdate = '',
     bool toUpdate = true,
   }) {
+    final contains = oldConfig.headers.containsKey(key);
+    if (!contains) throw Exception(KMessages.notFoundKeyIInHeaders.replaceAll('@', key));
+
     toUpdate ? oldConfig.headers.update(key, (value) => value = valueIfToUpdate) : oldConfig.headers.remove(key);
     return oldConfig;
   }

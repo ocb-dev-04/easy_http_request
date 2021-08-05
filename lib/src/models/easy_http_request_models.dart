@@ -67,36 +67,6 @@ class EasyHttpConfig extends EasyHttpConfigBase {
   late String identifier;
 }
 
-/// Class used to set http client config
-class EasyChangeHttpConfig extends EasyHttpConfigBase {
-  /// Model that is requested when change the http client.
-  ///
-  /// It has the basic information both for the creation of the hhtp client
-  /// and to validate the maximum status code with which it can be interpreted
-  /// that a request is invalid or not.
-  EasyChangeHttpConfig({
-    required this.identifier,
-    this.apiPath,
-    headers = const {},
-    timeOut = 30 * 1000,
-    validStatus = 204,
-    followRedirect = false,
-    includeLogger = true,
-  }) : super(
-          headers: headers,
-          timeOut: timeOut,
-          validStatus: validStatus,
-          followRedirect: followRedirect,
-          includeLogger: includeLogger,
-        );
-
-  /// Base URL of your service
-  late String? apiPath;
-
-  /// Label (name) to identifier API path
-  late String identifier;
-}
-
 /// Class that contains the standard response model in the methods
 class EasyHttpRequestResponse<T> {
   /// Standard response model when a package method is invoked

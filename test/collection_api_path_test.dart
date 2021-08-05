@@ -65,92 +65,53 @@ void main() {
 
   group('Change on board', () {
     test('Change Headers', () async {
-      try {
-        // add headers
-        EasyHeadersManager.addHeadersManyClient(identifier: firstIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
-        EasyHeadersManager.addHeadersManyClient(identifier: secondIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+      // add headers
+      EasyHeadersManager.addHeadersManyClient(identifier: firstIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
+      EasyHeadersManager.addHeadersManyClient(identifier: secondIdentifier, newHeaders: {'jwt': 'qwertyuiop', 'api_key': 'iuqhjnudh87asyd8a7ys7ds'});
 
-        // update header
-        EasyHeadersManager.updateHeadersManyClient(identifier: firstIdentifier, key: 'jwt', value: 'poiuytrewq');
-        EasyHeadersManager.updateHeadersManyClient(identifier: secondIdentifier, key: 'api_key', value: '174091u1j2e091j2');
+      // update header
+      EasyHeadersManager.updateHeadersManyClient(identifier: firstIdentifier, key: 'jwt', value: 'poiuytrewq');
+      EasyHeadersManager.updateHeadersManyClient(identifier: secondIdentifier, key: 'api_key', value: '174091u1j2e091j2');
 
-        // remove header
-        EasyHeadersManager.removeHeadersManyClient(identifier: firstIdentifier, key: 'api_key');
-        EasyHeadersManager.removeHeadersManyClient(identifier: secondIdentifier, key: 'jwt');
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      // remove header
+      EasyHeadersManager.removeHeadersManyClient(identifier: firstIdentifier, key: 'api_key');
+      EasyHeadersManager.removeHeadersManyClient(identifier: secondIdentifier, key: 'jwt');
     });
   });
 
   group('On Get Single => ', () {
     test('Compare model data', () async {
-      try {
-        final first = await client.requestWithManyPATH<PostModel>(
-          model: PostModel(),
-          identifier: firstIdentifier,
-          requestType: EasyHttpType.getSingle,
-          extraUri: 'posts/1',
-        );
-        final second = await client.requestWithManyPATH<ProductsModel>(
-          model: ProductsModel(),
-          identifier: secondIdentifier,
-          requestType: EasyHttpType.getSingle,
-          extraUri: 'users/1',
-        );
-        expect(first.modelResponse, isA<PostModel?>());
-        expect(second.modelResponse, isA<ProductsModel?>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      final first = await client.requestWithManyPATH<PostModel>(
+          model: PostModel(), identifier: firstIdentifier, requestType: EasyHttpType.getSingle, extraUri: 'posts/1');
+      final second = await client.requestWithManyPATH<ProductsModel>(
+          model: ProductsModel(), identifier: secondIdentifier, requestType: EasyHttpType.getSingle, extraUri: 'users/1');
+
+      expect(first.modelResponse, isA<PostModel?>());
+      expect(second.modelResponse, isA<ProductsModel?>());
     });
   });
 
   group('On Get Collection => ', () {
     test('Compare model data', () async {
-      try {
-        final first = await client.requestWithManyPATH<PostModel>(
-          model: PostModel(),
-          requestType: EasyHttpType.getCollection,
-          extraUri: 'posts',
-          identifier: firstIdentifier,
-        );
-        final second = await client.requestWithManyPATH<ProductsModel>(
-          model: ProductsModel(),
-          requestType: EasyHttpType.getCollection,
-          extraUri: 'users',
-          identifier: secondIdentifier,
-        );
-        expect(first.modelResponseAsList, isA<List<PostModel?>>());
-        expect(second.modelResponseAsList, isA<List<ProductsModel?>>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      final first = await client.requestWithManyPATH<PostModel>(
+          model: PostModel(), requestType: EasyHttpType.getCollection, extraUri: 'posts', identifier: firstIdentifier);
+      final second = await client.requestWithManyPATH<ProductsModel>(
+          model: ProductsModel(), requestType: EasyHttpType.getCollection, extraUri: 'users', identifier: secondIdentifier);
+
+      expect(first.modelResponseAsList, isA<List<PostModel?>>());
+      expect(second.modelResponseAsList, isA<List<ProductsModel?>>());
     });
   });
 
   group('On Post => ', () {
     test('Return model', () async {
-      try {
-        final first = await client.requestWithManyPATH<PostModel>(
-          model: fakerModel,
-          requestType: EasyHttpType.post,
-          extraUri: 'posts',
-          returnModel: true,
-          identifier: firstIdentifier,
-        );
-        final second = await client.requestWithManyPATH<ProductsModel>(
-          model: prodFakerModel,
-          requestType: EasyHttpType.post,
-          extraUri: 'users',
-          returnModel: true,
-          identifier: firstIdentifier,
-        );
-        expect(first.modelResponse, isA<PostModel>());
-        expect(second.modelResponse, isA<ProductsModel>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      final first = await client.requestWithManyPATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.post, extraUri: 'posts', returnModel: true, identifier: firstIdentifier);
+      final second = await client.requestWithManyPATH<ProductsModel>(
+          model: prodFakerModel, requestType: EasyHttpType.post, extraUri: 'users', returnModel: true, identifier: firstIdentifier);
+
+      expect(first.modelResponse, isA<PostModel>());
+      expect(second.modelResponse, isA<ProductsModel>());
     });
 
     test('Compare response (http client)', () async {
@@ -171,89 +132,44 @@ void main() {
 
   group('On Put => ', () {
     test('Return model', () async {
-      try {
-        final first = await client.requestWithManyPATH<PostModel>(
-          model: fakerModel,
-          requestType: EasyHttpType.put,
-          extraUri: 'posts/${fakerModel.id}',
-          returnModel: true,
-          identifier: firstIdentifier,
-        );
-        final second = await client.requestWithManyPATH<ProductsModel>(
-          model: prodFakerModel,
-          requestType: EasyHttpType.put,
-          extraUri: 'posts/${prodFakerModel.id}',
-          returnModel: true,
-          identifier: firstIdentifier,
-        );
-        expect(first.modelResponse, isA<PostModel>());
-        expect(second.modelResponse, isA<ProductsModel>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      final first = await client.requestWithManyPATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.put, extraUri: 'posts/${fakerModel.id}', returnModel: true, identifier: firstIdentifier);
+      final second = await client.requestWithManyPATH<ProductsModel>(
+          model: prodFakerModel, requestType: EasyHttpType.put, extraUri: 'posts/${prodFakerModel.id}', returnModel: true, identifier: firstIdentifier);
+
+      expect(first.modelResponse, isA<PostModel>());
+      expect(second.modelResponse, isA<ProductsModel>());
     });
   });
 
   group('On Patch => ', () {
     test('Return model', () async {
-      try {
-        final first = await client.requestWithManyPATH<PostModel>(
-          model: fakerModel,
-          requestType: EasyHttpType.patch,
-          extraUri: 'posts/${fakerModel.id}',
-          returnModel: true,
-          identifier: firstIdentifier,
-        );
-        final second = await client.requestWithManyPATH<ProductsModel>(
-          model: prodFakerModel,
-          requestType: EasyHttpType.patch,
-          extraUri: 'users/${prodFakerModel.id}',
-          returnModel: true,
-          identifier: firstIdentifier,
-        );
-        expect(first.modelResponse, isA<PostModel>());
-        expect(second.modelResponse, isA<ProductsModel>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      final first = await client.requestWithManyPATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.patch, extraUri: 'posts/${fakerModel.id}', returnModel: true, identifier: firstIdentifier);
+      final second = await client.requestWithManyPATH<ProductsModel>(
+          model: prodFakerModel, requestType: EasyHttpType.patch, extraUri: 'users/${prodFakerModel.id}', returnModel: true, identifier: firstIdentifier);
+
+      expect(first.modelResponse, isA<PostModel>());
+      expect(second.modelResponse, isA<ProductsModel>());
     });
 
     test('Compare response (http client)', () async {
-      try {
-        final response = await client.requestWithManyPATH<PostModel>(
-          model: fakerModel,
-          requestType: EasyHttpType.patch,
-          extraUri: 'posts/${fakerModel.id}',
-          returnModel: true,
-          identifier: firstIdentifier,
-        );
-        expect(response.completeResponse, isA<Response>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      final response = await client.requestWithManyPATH<PostModel>(
+          model: fakerModel, requestType: EasyHttpType.patch, extraUri: 'posts/${fakerModel.id}', returnModel: true, identifier: firstIdentifier);
+
+      expect(response.completeResponse, isA<Response>());
     });
   });
 
   group('On Delete => ', () {
     test('Compare response (http client)', () async {
-      try {
-        final first = await client.requestWithManyPATH<PostModel>(
-          model: PostModel(),
-          requestType: EasyHttpType.delete,
-          extraUri: 'posts/${fakerModel.id}',
-          identifier: firstIdentifier,
-        );
-        final second = await client.requestWithManyPATH<ProductsModel>(
-          model: ProductsModel(),
-          requestType: EasyHttpType.delete,
-          extraUri: 'users/${prodFakerModel.id}',
-          identifier: firstIdentifier,
-        );
-        expect(first.completeResponse, isA<Response>());
-        expect(second.completeResponse, isA<Response>());
-      } catch (e) {
-        expect(e, isA<DioError>());
-      }
+      final first = await client.requestWithManyPATH<PostModel>(
+          model: PostModel(), requestType: EasyHttpType.delete, extraUri: 'posts/${fakerModel.id}', identifier: firstIdentifier);
+      final second = await client.requestWithManyPATH<ProductsModel>(
+          model: ProductsModel(), requestType: EasyHttpType.delete, extraUri: 'users/${prodFakerModel.id}', identifier: firstIdentifier);
+
+      expect(first.completeResponse, isA<Response>());
+      expect(second.completeResponse, isA<Response>());
     });
   });
 }

@@ -10,10 +10,7 @@ const String mainApiPath = 'MAIN_API';
 void main() {
   // package init
   EasyHttpSettings.initWithSingleApi(config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath));
-  EasyHttpSettings.initWithManyApi(config: [
-    EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: firstIdentifier),
-    EasyHttpConfig(apiPath: 'https://fakestoreapi.com', identifier: secondIdentifier)
-  ]);
+
   DIManager.setup();
   runApp(App());
 }
@@ -106,6 +103,7 @@ class HttpServices {
   Future<void> getOne({required int id}) async {
     try {
       EasyHeadersManager.addHeadersSingleClient(newHeaders: {"jwt": "qwertyuiop"});
+      EasyHeadersManager.addHeadersSingleClient(newHeaders: {"jwt": "qwertyuiop1234567890"});
       final response =
           await _httpContract.requestWithSinglePATH<PostModel>(model: PostModel(), requestType: EasyHttpType.getSingle, extraUri: '$_extraUri/$id');
       final justOne = response.modelResponse!;
