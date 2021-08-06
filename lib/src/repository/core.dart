@@ -18,7 +18,8 @@ import 'package:easy_http_request/src/parser/http_parser.dart';
 /// Implement EasyHttpRequestContract.
 class EasyHttpRequest implements EasyHttpRequestContract {
   @override
-  Future<EasyHttpRequestResponse<T>> requestWithSinglePATH<T extends HttpDataParser<T>>({
+  Future<EasyHttpRequestResponse<T>>
+      requestWithSinglePATH<T extends HttpDataParser<T>>({
     required T model,
     required EasyHttpType requestType,
     String extraUri = '',
@@ -37,7 +38,8 @@ class EasyHttpRequest implements EasyHttpRequestContract {
   }
 
   @override
-  Future<EasyHttpRequestResponse<T>> requestWithManyPATH<T extends HttpDataParser<T>>({
+  Future<EasyHttpRequestResponse<T>>
+      requestWithManyPATH<T extends HttpDataParser<T>>({
     required T model,
     required String identifier,
     required EasyHttpType requestType,
@@ -45,7 +47,8 @@ class EasyHttpRequest implements EasyHttpRequestContract {
     Map<String, dynamic> queryParams = const {},
     bool returnModel = false,
   }) async {
-    if (identifier.isEmpty) throw Exception('Need a identifier to access to Http Client instance');
+    if (identifier.isEmpty)
+      throw Exception('Need a identifier to access to Http Client instance');
 
     final client = EasyHttpClient.getFromMany(identifier);
     return await _makeRequest<T>(
@@ -70,22 +73,28 @@ class EasyHttpRequest implements EasyHttpRequestContract {
     try {
       switch (requestType) {
         case EasyHttpType.getSingle:
-          response = await client.dio.get(extraUri, queryParameters: queryParams);
+          response =
+              await client.dio.get(extraUri, queryParameters: queryParams);
           break;
         case EasyHttpType.getCollection:
-          response = await client.dio.get(extraUri, queryParameters: queryParams);
+          response =
+              await client.dio.get(extraUri, queryParameters: queryParams);
           break;
         case EasyHttpType.post:
-          response = await client.dio.post(extraUri, queryParameters: queryParams, data: model.toJson());
+          response = await client.dio.post(extraUri,
+              queryParameters: queryParams, data: model.toJson());
           break;
         case EasyHttpType.put:
-          response = await client.dio.put(extraUri, queryParameters: queryParams, data: model.toJson());
+          response = await client.dio.put(extraUri,
+              queryParameters: queryParams, data: model.toJson());
           break;
         case EasyHttpType.patch:
-          response = await client.dio.patch(extraUri, queryParameters: queryParams, data: model.toJson());
+          response = await client.dio.patch(extraUri,
+              queryParameters: queryParams, data: model.toJson());
           break;
         case EasyHttpType.delete:
-          response = await client.dio.delete(extraUri, queryParameters: queryParams);
+          response =
+              await client.dio.delete(extraUri, queryParameters: queryParams);
           returnModel = false;
           break;
         default:
@@ -93,12 +102,16 @@ class EasyHttpRequest implements EasyHttpRequestContract {
 
       responseModel = EasyHttpRequestResponse(completeResponse: response);
 
-      if (response.statusCode! > client.config.validStatus!) return responseModel;
+      if (response.statusCode! > client.config.validStatus!)
+        return responseModel;
 
       if (returnModel) {
         requestType == EasyHttpType.getCollection
-            ? responseModel.modelResponseAsList = (response.data! as List).map((e) => model.fromJson(e as Map<String, dynamic>)).toList()
-            : responseModel.modelResponse = model.fromJson(response.data! as Map<String, dynamic>);
+            ? responseModel.modelResponseAsList = (response.data! as List)
+                .map((e) => model.fromJson(e as Map<String, dynamic>))
+                .toList()
+            : responseModel.modelResponse =
+                model.fromJson(response.data! as Map<String, dynamic>);
       }
 
       return responseModel;
@@ -136,7 +149,8 @@ abstract class EasyHttpRequestContract {
   /// returnModel(optional): You can set it to true if your service returns a
   /// json of your model that has just been created and you need that
   /// information to save it locally or to update the UI
-  Future<EasyHttpRequestResponse<T>> requestWithSinglePATH<T extends HttpDataParser<T>>({
+  Future<EasyHttpRequestResponse<T>>
+      requestWithSinglePATH<T extends HttpDataParser<T>>({
     required T model,
     required EasyHttpType requestType,
     String extraUri = '',
@@ -170,7 +184,8 @@ abstract class EasyHttpRequestContract {
   /// returnModel(optional): You can set it to true if your service returns a
   /// json of your model that has just been created and you need that
   /// information to save it locally or to update the UI
-  Future<EasyHttpRequestResponse<T>> requestWithManyPATH<T extends HttpDataParser<T>>({
+  Future<EasyHttpRequestResponse<T>>
+      requestWithManyPATH<T extends HttpDataParser<T>>({
     required T model,
     required String identifier,
     required EasyHttpType requestType,
