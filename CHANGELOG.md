@@ -1,3 +1,7 @@
 ## 1.0.0
 
 * Add code for full use of the package. (Initializer, Parser, Methods and Response Model)
+
+## 1.0.1
+
+* Optimization and refactoring of the code to obtain the full points of the PUB POINTS

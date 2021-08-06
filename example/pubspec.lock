@@ -74,19 +74,10 @@ packages:
   easy_http_request:
     dependency: "direct main"
     description:
-      path: "../.."
+      path: ".."
       relative: true
     source: path
-    version: "1.0.0"
-  easy_reflection:
-    dependency: transitive
-    description:
-      path: "."
-      ref: main
-      resolved-ref: "02ba84670a94cab8a37b3a90e1df0f39a02d9b07"
-      url: "https://github.com/ocb-dev-04/easy_reflection"
-    source: git
-    version: "1.0.0"
+    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:
