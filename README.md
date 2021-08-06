@@ -33,14 +33,14 @@ First, import dependeny:
 import 'package:easy_http_request/easy_http_request.dart';
 ```
 
-Then if you only use a <strong>SINGLE PATH API</strong> you can do this:
+So if you only use a <strong>SINGLE API PATH</strong>, you can do this:
 
 ```dart
 const String mainApiPath = 'MAIN_API';
 EasyHttpSettings.initWithSingleApi(config: EasyHttpConfig(apiPath: 'https://jsonplaceholder.typicode.com', identifier: mainApiPath));
 ```
 
-Or, if you need to use a <strong>COLLECTION OF PATH APIS</strong>, you can do this:
+Or, if you need to use a <strong>COLLECTION API PATH</strong>, you can do this:
 
 ```dart
 const String firstIdentifier = 'FirstApiPath';
