@@ -10,6 +10,7 @@ linter:
     lines_longer_than_80_chars: false
     comment_references: false
     sort_pub_dependencies: false
+    curly_braces_in_flow_control_structures: false
     # I decided to add this, although I use cascading invocation, 
     # but in the code of adding headers if I use it it gives me an immutability error
     cascade_invocations: false 
