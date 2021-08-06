@@ -5,3 +5,7 @@
 ## 1.0.1
 
 * Optimization and refactoring of the code to obtain the full points of the PUB POINTS
+
+## 1.0.2
+
+* Refactoring and formatting the code. Documentation update.

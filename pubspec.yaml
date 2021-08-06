@@ -2,6 +2,7 @@ name: easy_http_request
 description: A package that simplifies the queries to the apis or web services, you focus on creating the model, this package takes care of the rest.
 version: 1.0.1
 
+homepage: http://ocbdev.com/
 repository: https://github.com/ocb-dev-04/easy_http_request
 
 environment: 

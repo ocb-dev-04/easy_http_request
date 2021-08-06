@@ -23,7 +23,7 @@ Add dependency
 
 ```yaml
 dependencies:
-  easy_http: 1.0.0
+  easy_http: 1.0.2
 ```
 
 ### Initialization
