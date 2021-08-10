@@ -1,21 +1,34 @@
 import 'package:dio/dio.dart';
 
-/// Base class with all config set
-class EasyHttpConfigBase {
-  /// Constructor
-  EasyHttpConfigBase({
+/// Class used to set http client config
+class EasyHttpConfig {
+  /// Model that is requested when initializing the package.
+  ///
+  /// It has the basic information both for the creation of the hhtp client
+  /// and to validate the maximum status code with which it can be interpreted
+  /// that a request is invalid or not.
+  EasyHttpConfig({
+    required this.identifier,
+    required this.apiPath,
     this.headers = const {},
-    this.timeOut,
-    this.validStatus,
-    this.followRedirect,
-    this.includeLogger,
+    this.timeOut = 30 * 1000,
+    this.validStatus = 204,
+    this.followRedirect = false,
+    this.includeLogger = true,
+    this.accessToLocalHost = false,
   });
+
+  /// Base URL of your service
+  late String apiPath;
+
+  /// Label (name) to identifier API path
+  late String identifier;
 
   /// Headers you want to include in your queries
   Map<String, dynamic> headers;
 
   /// Timeout to request data from the server
-  final int? timeOut;
+  final int timeOut;
 
   /// Valid status code for the request to be interpreted as complete
   /// or incomplete.
@@ -24,47 +37,22 @@ class EasyHttpConfigBase {
   ///
   /// If your service returns a 200 Ok, a 201 Created and a 204 NotContent
   /// your [validStatusCode] is the highest number in this case 204
-  final int? validStatus;
+  final int validStatus;
 
   /// If you want to follow the redirects. By default is false
-  final bool? followRedirect;
+  final bool followRedirect;
 
   /// If you want a log of the query you are doing at that time to be displayed.
   ///
   /// Recommended for development. For testing and production it is
   /// not necessary.
-  final bool? includeLogger;
-}
+  final bool includeLogger;
 
-/// Class used to set http client config
-class EasyHttpConfig extends EasyHttpConfigBase {
-  /// Model that is requested when initializing the package.
+  /// If you want a log of the query you are doing at that time to be displayed.
   ///
-  /// It has the basic information both for the creation of the hhtp client
-  /// and to validate the maximum status code with which it can be interpreted
-  /// that a request is invalid or not.
-
-  EasyHttpConfig({
-    required this.identifier,
-    required this.apiPath,
-    headers,
-    timeOut = 30 * 1000,
-    validStatus = 204,
-    followRedirect = false,
-    includeLogger = true,
-  }) : super(
-          headers: headers ?? const {},
-          timeOut: timeOut,
-          validStatus: validStatus,
-          followRedirect: followRedirect,
-          includeLogger: includeLogger,
-        );
-
-  /// Base URL of your service
-  late String apiPath;
-
-  /// Label (name) to identifier API path
-  late String identifier;
+  /// Recommended for development. For testing and production it is
+  /// not necessary.
+  final bool accessToLocalHost;
 }
 
 /// Class that contains the standard response model in the methods

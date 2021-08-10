@@ -22,6 +22,7 @@ void main() {
         includeLogger: false,
       ),
     );
+
     client = EasyHttpRequest();
     faker = Faker();
     fakerModel = PostModel(
