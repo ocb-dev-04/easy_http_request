@@ -15,7 +15,6 @@ class EasyHttpConfig {
     this.validStatus = 204,
     this.followRedirect = false,
     this.includeLogger = true,
-    this.accessToLocalHost = false,
   });
 
   /// Base URL of your service
@@ -47,12 +46,6 @@ class EasyHttpConfig {
   /// Recommended for development. For testing and production it is
   /// not necessary.
   final bool includeLogger;
-
-  /// If you want a log of the query you are doing at that time to be displayed.
-  ///
-  /// Recommended for development. For testing and production it is
-  /// not necessary.
-  final bool accessToLocalHost;
 }
 
 /// Class that contains the standard response model in the methods

@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_http_formatter/dio_http_formatter.dart';
 import 'package:easy_http_request/src/constants/messages.dart';
@@ -29,11 +26,11 @@ class EasyHttpClient {
       );
 
   /// Allows access to the previously configured http client (many endpoint)
-  static void setManyClient({required List<EasyHttpConfig> config}) => manyClient = config.map((e) {
-        final duplicated = _duplicatedIdentifier(newIdentifier: e.identifier);
-        if (duplicated) throw Exception(KMessages.duplicatedIdentifier.replaceAll('@', e.identifier));
-
-        return ManyClientInstances(dio: _setDio(e), identifier: e.identifier, config: e);
+  static void setManyClient({required List<EasyHttpConfig> config}) => manyClient = config.asMap().entries.map((e) {
+        final duplicated = _duplicatedIdentifier(newIdentifier: e.value.identifier);
+        if (duplicated) throw Exception(KMessages.duplicatedIdentifier.replaceAll('@', e.value.identifier));
+        debugPrint('EasyHttpRequest LOG >>> API PATH #${e.key + 1} >>> ID = ${e.value.identifier} >>> API PATH = ${e.value.apiPath}');
+        return ManyClientInstances(dio: _setDio(e.value), identifier: e.value.identifier, config: e.value);
       }).toList();
 
   /// Add header when client was initialized (single client)
@@ -94,15 +91,6 @@ class EasyHttpClient {
     dio.options.followRedirects = e.followRedirect;
     dio.options.headers = e.headers;
     if (e.includeLogger) dio.interceptors.add(HttpFormatter(includeResponseBody: false));
-
-    if (e.accessToLocalHost && kDebugMode) {
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (HttpClient client) => client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-    }
-
-    if (e.accessToLocalHost && !kDebugMode) {
-      throw Exception(KMessages.useLocalhostInProd);
-    }
 
     return dio;
   }
